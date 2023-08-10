@@ -14,7 +14,6 @@ module.exports = {
   ],
   rules: {
     '@typescript-eslint/brace-style': [2, 'stroustrup'],
-    '@typescript-eslint/consistent-indexed-object-style': [2, 'index-signature'],
     '@typescript-eslint/consistent-type-definitions': [2, 'type'],
     '@typescript-eslint/member-delimiter-style': [2, {
       multiline: { delimiter: 'comma', requireLast: true },

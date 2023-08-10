@@ -9,7 +9,9 @@ export default {
     },
     extend: {
       fontWeight: {
+        normal: '400',
         bold: '600',
+        black: '700',
       },
     },
   },
