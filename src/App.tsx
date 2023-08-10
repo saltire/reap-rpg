@@ -13,8 +13,8 @@ export default function App() {
 
   return (
     <div className='App'>
-      <header className='mb-8 py-2 bg-zinc-300 text-center'>
-        <h1 className='text-3xl font-bold'>REAP: Kyrie Realm</h1>
+      <header className='mb-8 py-2 bg-black text-white text-center'>
+        <h1 className='font-header text-5xl'>REAP: Kyrie Realm</h1>
       </header>
       <main className='text-center'>
         <h2 className='text-2xl font-bold'>{point.name}</h2>
