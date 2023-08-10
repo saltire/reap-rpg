@@ -1,18 +1,36 @@
+import { useMemo, useState } from 'react';
+
 import './App.scss';
+import points from './points';
+import SplitLines from './SplitLines';
+import { exists } from './utils';
 
 
-type AppProps = {
-  name?: string,
-};
+export default function App() {
+  const [point, setPoint] = useState(points[0]);
 
-export default function App({ name }: AppProps) {
+  const exits = useMemo(() => point.exits.map(pid => points.find(p => p.id === pid)).filter(exists),
+    [point]);
+
   return (
     <div className='App'>
       <header>
-        <h1>{name || 'React TypeScript Boilerplate App'}</h1>
+        <h1>REAP: Kyrie Realm</h1>
       </header>
       <main>
-        Edit <code>App.jsx</code> and save to hot reload your changes.
+        <h2>{point.name}</h2>
+        <SplitLines text={point.description} />
+        <p>
+          {exits.map(exit => (
+            <button
+              key={exit.id}
+              type='button'
+              onClick={() => setPoint(exit)}
+            >
+              {exit.name}
+            </button>
+          ))}
+        </p>
       </main>
     </div>
   );

@@ -12,5 +12,14 @@
 
   > main {
     text-align: center;
+
+    button {
+      display: block;
+      margin: .5rem auto;
+      border: none;
+      background: none;
+      text-decoration: underline;
+      cursor: pointer;
+    }
   }
 }

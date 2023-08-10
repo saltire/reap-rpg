@@ -1,8 +1,7 @@
 {
-	"name": "react-typescript-boilerplate",
-	"version": "0.0.0",
-	"description": "Boilerplate front-end app with React, Typescript and SCSS.",
-	"license": "ISC",
+	"name": "reap-rpg",
+	"description": "Web-based version of REAP tabletop RPG.",
+	"private": true,
 	"scripts": {
 		"build": "webpack --config webpack.prod.js",
 		"watch": "webpack serve --config webpack.dev.js",
