@@ -1,6 +1,5 @@
 import { useMemo, useState } from 'react';
 
-import './App.scss';
 import points from './points';
 import SplitLines from './SplitLines';
 import { exists } from './utils';
@@ -14,17 +13,24 @@ export default function App() {
 
   return (
     <div className='App'>
-      <header>
-        <h1>REAP: Kyrie Realm</h1>
+      <header className='mb-8 py-2 bg-zinc-300 text-center'>
+        <h1 className='text-3xl font-bold'>REAP: Kyrie Realm</h1>
       </header>
-      <main>
-        <h2>{point.name}</h2>
+      <main className='text-center'>
+        <h2 className='text-2xl font-bold'>{point.name}</h2>
         <SplitLines text={point.description} />
-        <p>
+        <p className='my-4'>
           {exits.map(exit => (
             <button
               key={exit.id}
               type='button'
+              className='block mx-auto my-2 underline cursor-pointer'
+              // display: block;
+              // margin: .5rem auto;
+              // border: none;
+              // background: none;
+              // text-decoration: underline;
+              // cursor: pointer;'
               onClick={() => setPoint(exit)}
             >
               {exit.name}

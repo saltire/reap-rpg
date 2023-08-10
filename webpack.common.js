@@ -14,17 +14,13 @@ module.exports = {
 	module: {
 		rules: [
 			{
-				test: /\.[jt]sx?$/,
+				test: /\.tsx?$/,
 				exclude: /node_modules/,
 				use: 'babel-loader',
 			},
       {
         test: /\.s?css$/,
-        use: [
-          MiniCssExtractPlugin.loader,
-          'css-loader',
-          { loader: 'sass-loader', options: { sassOptions: { quietDeps: true } } },
-        ],
+        use: [MiniCssExtractPlugin.loader, 'css-loader', 'postcss-loader'],
       },
 		],
 	},
