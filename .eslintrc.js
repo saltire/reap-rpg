@@ -26,6 +26,7 @@ module.exports = {
     'function-call-argument-newline': 0,
     'function-paren-newline': 0,
     'import/order': [2, {
+      alphabetize: { order: 'asc' },
       groups: [['builtin', 'external'], ['sibling', 'parent']],
       'newlines-between': 'always',
     }],
