@@ -1,7 +1,7 @@
 import { useMemo, useState } from 'react';
 
 import points from './points';
-import SplitLines from './SplitLines';
+import SplitLines from './components/SplitLines';
 import { exists } from './utils';
 
 
@@ -16,24 +16,28 @@ export default function App() {
       <header className='mb-8 py-2 bg-black text-white text-center'>
         <h1 className='font-header text-5xl'>REAP: Kyrie Realm</h1>
       </header>
-      <main className='text-center'>
-        <h2 className='text-2xl font-bold'>{point.name}</h2>
-        <SplitLines text={point.description} />
-        <p className='my-4'>
+      <main className='max-w-screen-sm mx-auto text-center'>
+        <h2 className='flex items-center justify-center my-8 font-bold'>
+          <span className='w-6 h-6 leading-6 mr-2 bg-black text-white text-xl rounded-full'>
+            {point.id}
+          </span>
+          <span className='text-3xl'>{point.name}</span>
+        </h2>
+        <div className='text-xl text-left'>
+          <SplitLines text={point.description} />
+        </div>
+        <p className='w-max mx-auto my-8'>
           {exits.map(exit => (
             <button
               key={exit.id}
               type='button'
-              className='block mx-auto my-2 underline cursor-pointer'
-              // display: block;
-              // margin: .5rem auto;
-              // border: none;
-              // background: none;
-              // text-decoration: underline;
-              // cursor: pointer;'
+              className='flex items-center w-full mx-auto my-2 px-2 ring-1 ring-black rounded-sm hover:bg-zinc-300 cursor-pointer'
               onClick={() => setPoint(exit)}
             >
-              {exit.name}
+              <span className='w-4 h-4 leading-4 mr-1 bg-black text-white text-md rounded-full'>
+                {exit.id}
+              </span>
+              <span>{exit.name}</span>
             </button>
           ))}
         </p>
