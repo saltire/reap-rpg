@@ -1,3 +1,6 @@
+import { classList } from '../utils';
+
+
 type SplitLinesProps = {
   className?: string,
   text: string,
@@ -6,5 +9,5 @@ type SplitLinesProps = {
 /* eslint-disable react/no-array-index-key */
 export default function SplitLines({ className, text }: SplitLinesProps) {
   return text.split('\n')
-    .map((line, i) => <p key={i} className={`my-4 ${className || ''}`}>{line}</p>);
+    .map((line, i) => <p key={i} className={classList('my-4', className)}>{line}</p>);
 }

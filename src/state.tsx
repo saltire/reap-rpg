@@ -1,26 +1,22 @@
 import { createContext, Dispatch, Reducer, useContext } from 'react';
 
+import points, { Character } from './points';
 
-export type Character = {
-  body?: number,
-  bone?: number,
-  blood?: number,
-  lore?: number,
-};
 
 export type GameState = {
-  pointId: number,
+  pointNum: number,
   points: Record<number, ({
     visited?: true,
+    actions?: symbol[],
   } | undefined)>,
   character: Character,
   flags: Record<string, boolean>,
 };
 
 export const initialState: GameState = {
-  pointId: 1,
+  pointNum: points[0].number,
   points: {
-    1: {
+    [points[0].number]: {
       visited: true,
     },
   },
@@ -30,26 +26,44 @@ export const initialState: GameState = {
 
 export type Action = {
   type: 'go_to_point',
-  pointId: number,
+  pointNum: number,
 } | {
-  type: 'other',
+  type: 'use_action',
+  pointNum: number,
+  actionId: symbol,
 };
 
 export const reducer: Reducer<GameState, Action> = (game: GameState, action: Action) => {
-  if (action.type === 'go_to_point') {
-    return {
-      ...game,
-      pointId: action.pointId,
-      points: {
-        ...game.points,
-        [action.pointId]: {
-          ...game.points[action.pointId],
-          visited: true,
+  switch (action.type) {
+    case 'go_to_point':
+      return {
+        ...game,
+        pointNum: action.pointNum,
+        points: {
+          ...game.points,
+          [action.pointNum]: {
+            ...game.points[action.pointNum],
+            visited: true,
+          },
         },
-      },
-    };
+      };
+
+    case 'use_action':
+      return {
+        ...game,
+        points: {
+          ...game.points,
+          [action.pointNum]: {
+            ...game.points[action.pointNum],
+            actions: Array.from(new Set([
+              ...game.points[action.pointNum]?.actions ?? [], action.actionId])),
+          },
+        },
+      };
+
+    default:
+      return game;
   }
-  return game;
 };
 
 export const GameStateContext = createContext<GameState>(initialState);
