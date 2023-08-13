@@ -1,11 +1,20 @@
 import { createContext, Dispatch, Reducer, useContext } from 'react';
 
 
+export type Character = {
+  body?: number,
+  bone?: number,
+  blood?: number,
+  lore?: number,
+};
+
 export type GameState = {
   pointId: number,
   points: Record<number, ({
     visited?: true,
   } | undefined)>,
+  character: Character,
+  flags: Record<string, boolean>,
 };
 
 export const initialState: GameState = {
@@ -15,6 +24,8 @@ export const initialState: GameState = {
       visited: true,
     },
   },
+  character: {},
+  flags: {},
 };
 
 export type Action = {
