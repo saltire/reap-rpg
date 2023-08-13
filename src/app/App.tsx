@@ -1,8 +1,7 @@
 import { useEffect, useReducer } from 'react';
 
-import Character from './Character';
-import Point from './Point';
-import Button from './components/Button';
+import MainFrame from './MainFrame';
+import SideFrame from './SideFrame';
 import { reducer, GameStateContext, DispatchContext, initialState } from '../state';
 
 
@@ -22,25 +21,8 @@ export default function App() {
           </header>
 
           <main className='flex flex-grow overflow-hidden'>
-            <div className='flex flex-col max-w-screen-sm px-4 border-r border-black'>
-              <div className='flex-grow'>
-                <Character />
-              </div>
-              <div>
-                <Button
-                  className='justify-center'
-                  onClick={() => dispatch({ type: 'reset_game' })}
-                >
-                  Reset
-                </Button>
-              </div>
-            </div>
-
-            <div className='flex-grow overflow-y-auto px-4'>
-              <div className='max-w-screen-sm mx-auto text-center'>
-                <Point />
-              </div>
-            </div>
+            <SideFrame />
+            <MainFrame />
           </main>
         </div>
       </DispatchContext.Provider>
