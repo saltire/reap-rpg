@@ -4,19 +4,19 @@ import points, { Character } from './points';
 
 
 export type GameState = {
-  pointNum: number,
+  pointId: number,
   points: Record<number, ({
     visited?: true,
-    actions?: symbol[],
+    actions?: number[],
   } | undefined)>,
   character: Character,
   flags: Record<string, boolean>,
 };
 
 export const initialState: GameState = {
-  pointNum: points[0].number,
+  pointId: points[0].id,
   points: {
-    [points[0].number]: {
+    [points[0].id]: {
       visited: true,
     },
   },
@@ -25,45 +25,66 @@ export const initialState: GameState = {
 };
 
 export type Action = {
+  type: 'load_saved_game',
+} | {
+  type: 'reset_game',
+} | {
   type: 'go_to_point',
-  pointNum: number,
+  pointId: number,
 } | {
   type: 'use_action',
-  pointNum: number,
-  actionId: symbol,
+  pointId: number,
+  actionId: number,
 };
 
 export const reducer: Reducer<GameState, Action> = (game: GameState, action: Action) => {
+  let newState = game;
+
   switch (action.type) {
-    case 'go_to_point':
-      return {
+    case 'load_saved_game': {
+      const savedStateStr = localStorage.getItem('game');
+      newState = savedStateStr ? JSON.parse(savedStateStr) as GameState : initialState;
+      break;
+    }
+    case 'reset_game': {
+      newState = initialState;
+      break;
+    }
+    case 'go_to_point': {
+      newState = {
         ...game,
-        pointNum: action.pointNum,
+        pointId: action.pointId,
         points: {
           ...game.points,
-          [action.pointNum]: {
-            ...game.points[action.pointNum],
+          [action.pointId]: {
+            ...game.points[action.pointId],
             visited: true,
           },
         },
       };
-
-    case 'use_action':
-      return {
+      break;
+    }
+    case 'use_action': {
+      newState = {
         ...game,
         points: {
           ...game.points,
-          [action.pointNum]: {
-            ...game.points[action.pointNum],
+          [action.pointId]: {
+            ...game.points[action.pointId],
             actions: Array.from(new Set([
-              ...game.points[action.pointNum]?.actions ?? [], action.actionId])),
+              ...game.points[action.pointId]?.actions ?? [], action.actionId])),
           },
         },
       };
-
+      break;
+    }
     default:
-      return game;
+      break;
   }
+
+  localStorage.setItem('game', JSON.stringify(newState));
+
+  return newState;
 };
 
 export const GameStateContext = createContext<GameState>(initialState);
