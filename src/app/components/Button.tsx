@@ -1,6 +1,6 @@
 import { ButtonHTMLAttributes } from 'react';
 
-import { classList } from '../utils';
+import { classList } from '../../utils';
 
 
 type ButtonProps = ButtonHTMLAttributes<HTMLButtonElement>;

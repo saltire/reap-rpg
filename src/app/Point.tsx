@@ -2,9 +2,9 @@ import { useMemo } from 'react';
 
 import Button from './components/Button';
 import SplitLines from './components/SplitLines';
-import points, { Character } from './points';
-import { useGameState, useDispatch } from './state';
-import { classList, exists } from './utils';
+import points, { Character } from '../points';
+import { useGameState, useDispatch } from '../state';
+import { classList, exists } from '../utils';
 
 
 export default function Point() {

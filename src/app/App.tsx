@@ -2,7 +2,7 @@ import { useReducer } from 'react';
 
 import Character from './Character';
 import Point from './Point';
-import { reducer, GameStateContext, DispatchContext, initialState } from './state';
+import { reducer, GameStateContext, DispatchContext, initialState } from '../state';
 
 
 export default function App() {

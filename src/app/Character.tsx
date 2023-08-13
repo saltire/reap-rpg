@@ -1,4 +1,4 @@
-import { useGameState } from './state';
+import { useGameState } from '../state';
 
 
 export default function Character() {
