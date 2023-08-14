@@ -1,4 +1,4 @@
-type Point = {
+export type Point = {
   id: number,
   name: string,
   description: string,
@@ -6,34 +6,32 @@ type Point = {
   actions?: Action[],
 };
 
-type Action = {
+export type Action = {
   id: number,
   name: string,
   requires?: {
-    character?: Character,
+    character?: Partial<Character>,
     flags?: Record<string, boolean>,
   },
   description: string,
-  result: Result,
+  resultText?: string,
+  result?: Result,
+  choices?: Result[],
 };
 
-type Result = {
-  description?: string,
-  body?: number,
-  bone?: number,
-  blood?: number,
-  lore?: number,
-  veilWalk?: number,
-  choices?: Result[],
+export type Result = {
+  // description?: string,
+  character?: Partial<Character>,
   flags?: Record<string, boolean>,
   moveTo?: number,
 };
 
 export type Character = {
-  body?: number,
-  bone?: number,
-  blood?: number,
-  lore?: number,
+  body: number,
+  bone: number,
+  blood: number,
+  lore: number,
+  veilWalk?: number,
 };
 
 const points: Point[] = [
@@ -47,14 +45,12 @@ const points: Point[] = [
         id: 11,
         name: 'SEARCH',
         description: 'The corpse of one of the residents of this land leans against the altar. They won’t be needing their parts, and so you salvage what you can.',
-        result: {
-          description: 'Choose 1 component to reap from the corpse: Bone, Body, or Blood.',
-          choices: [
-            { body: 1 },
-            { bone: 1 },
-            { blood: 1 },
-          ],
-        },
+        resultText: 'Choose 1 component to reap from the corpse: Bone, Body, or Blood.',
+        choices: [
+          { character: { body: 1 } },
+          { character: { bone: 1 } },
+          { character: { blood: 1 } },
+        ],
       },
     ],
   },
@@ -68,9 +64,9 @@ const points: Point[] = [
         id: 21,
         name: 'LEARN',
         description: 'One local is willing to meet with you. “Necromancer...we’ve not seen one like you in a while. Please, they don’t realize it. Their prayers will be the death of us.”',
+        resultText: 'Increase Lore +1.',
         result: {
-          description: 'Increase Lore +1.',
-          lore: 1,
+          character: { lore: 1 },
         },
       },
     ],
@@ -91,9 +87,9 @@ const points: Point[] = [
         id: 41,
         name: 'SEARCH',
         description: 'A current from the veil blows between the trees here, coalescing in this meadow. You reach out, and capture a bit of it in a bottle.',
+        resultText: 'Gain Veil Walk, two uses. When you use this during exploration, you do not mark the Horror Clock when you move between Points.',
         result: {
-          description: 'Gain Veil Walk, two uses. When you use this during exploration, you do not mark the Horror Clock when you move between Points.',
-          veilWalk: 2,
+          character: { veilWalk: 2 },
         },
       },
     ],
@@ -114,14 +110,12 @@ const points: Point[] = [
         id: 61,
         name: 'SEARCH',
         description: 'An offering basket sits near the entrance. Inside are pieces of the congregation.',
-        result: {
-          description: 'Reap one of any component type: Blood, Body, or Bone.',
-          choices: [
-            { body: 1 },
-            { bone: 1 },
-            { blood: 1 },
-          ],
-        },
+        resultText: 'Reap one of any component type: Blood, Body, or Bone.',
+        choices: [
+          { character: { body: 1 } },
+          { character: { bone: 1 } },
+          { character: { blood: 1 } },
+        ],
       },
       {
         id: 62,
@@ -129,9 +123,7 @@ const points: Point[] = [
         requires: { character: { lore: 2 } },
         description: 'You know the way to the organ in the church, and can damage it. When you face the Horror, they do not have access to their *Organ* special ability.',
         result: {
-          flags: {
-            disableOrgan: true,
-          },
+          flags: { disableOrgan: true },
         },
       },
       {
@@ -154,12 +146,10 @@ const points: Point[] = [
         id: 71,
         name: 'LEARN',
         description: 'It’s not a beast you seek, it’s one of our own. The high priest Lysander has been twisted, their gospel a most vicious spell.',
+        resultText: 'Increase Lore +1. In addition, learn the Horror’s name.',
         result: {
-          description: 'Increase Lore +1. In addition, learn the Horror’s name.',
-          lore: 1,
-          flags: {
-            horrorName: true,
-          },
+          character: { lore: 1 },
+          flags: { horrorName: true },
         },
       },
     ],

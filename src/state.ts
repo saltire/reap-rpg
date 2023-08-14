@@ -1,16 +1,17 @@
 import { createContext, Dispatch, Reducer, useContext } from 'react';
 
-import points, { Character } from './points';
+import points, { Character, Result } from './points';
 
 
 export type GameState = {
+  character: Character,
+  flags: Record<string, boolean>,
   pointId: number,
   points: Record<number, ({
     visited?: true,
     actions?: number[],
   } | undefined)>,
-  character: Character,
-  flags: Record<string, boolean>,
+  actionId?: number,
 };
 
 export const initialState: GameState = {
@@ -20,11 +21,16 @@ export const initialState: GameState = {
       visited: true,
     },
   },
-  character: {},
+  character: {
+    body: 0,
+    bone: 0,
+    blood: 0,
+    lore: 0,
+  },
   flags: {},
 };
 
-export type Action = {
+export type StateAction = {
   type: 'load_saved_game',
 } | {
   type: 'reset_game',
@@ -35,9 +41,14 @@ export type Action = {
   type: 'use_action',
   pointId: number,
   actionId: number,
+} | {
+  type: 'clear_action',
+} | {
+  type: 'apply_result',
+  result: Result,
 };
 
-export const reducer: Reducer<GameState, Action> = (game: GameState, action: Action) => {
+export const reducer: Reducer<GameState, StateAction> = (game: GameState, action: StateAction) => {
   let newState = game;
 
   switch (action.type) {
@@ -46,10 +57,12 @@ export const reducer: Reducer<GameState, Action> = (game: GameState, action: Act
       newState = savedStateStr ? JSON.parse(savedStateStr) as GameState : initialState;
       break;
     }
+
     case 'reset_game': {
       newState = initialState;
       break;
     }
+
     case 'go_to_point': {
       newState = {
         ...game,
@@ -64,6 +77,7 @@ export const reducer: Reducer<GameState, Action> = (game: GameState, action: Act
       };
       break;
     }
+
     case 'use_action': {
       newState = {
         ...game,
@@ -75,9 +89,28 @@ export const reducer: Reducer<GameState, Action> = (game: GameState, action: Act
               ...game.points[action.pointId]?.actions ?? [], action.actionId])),
           },
         },
+        actionId: action.actionId,
       };
       break;
     }
+
+    case 'clear_action': {
+      newState = {
+        ...game,
+        actionId: undefined,
+      };
+      break;
+    }
+
+    case 'apply_result': {
+      Object.entries(action.result.character ?? {}).forEach(([key, value]) => {
+        newState.character[key as keyof Character] = (
+          (newState.character[key as keyof Character] || 0) + value);
+      });
+      newState.flags = { ...newState.flags, ...action.result.flags };
+      break;
+    }
+
     default:
       break;
   }
@@ -88,7 +121,7 @@ export const reducer: Reducer<GameState, Action> = (game: GameState, action: Act
 };
 
 export const GameStateContext = createContext<GameState>(initialState);
-export const DispatchContext = createContext<Dispatch<Action>>(() => {});
+export const DispatchContext = createContext<Dispatch<StateAction>>(() => {});
 
 export const useGameState = () => useContext(GameStateContext);
 export const useDispatch = () => useContext(DispatchContext);

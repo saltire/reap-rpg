@@ -3,13 +3,13 @@ import { useMemo } from 'react';
 import Button from './components/Button';
 import SplitLines from './components/SplitLines';
 import points, { Character } from '../points';
-import { useGameState, useDispatch } from '../state';
+import { useDispatch, useGameState } from '../state';
 import { classList, exists } from '../utils';
 
 
 export default function Point() {
-  const game = useGameState();
   const dispatch = useDispatch();
+  const game = useGameState();
 
   const point = points.find(p => p.id === game.pointId);
   const exits = useMemo(
@@ -47,6 +47,9 @@ export default function Point() {
               disabled={disabled}
               onClick={() => {
                 dispatch({ type: 'use_action', pointId: point.id, actionId: action.id });
+                if (action.result) {
+                  dispatch({ type: 'apply_result', result: action.result });
+                }
               }}
             >
               <span

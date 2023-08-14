@@ -11,14 +11,20 @@ export default function Character() {
       </h2>
 
       <div className='my-2'>
-        <p>Body: {character.body || 0}</p>
-        <p>Bone: {character.bone || 0}</p>
-        <p>Blood: {character.blood || 0}</p>
+        <p>Body: {character.body}</p>
+        <p>Bone: {character.bone}</p>
+        <p>Blood: {character.blood}</p>
       </div>
 
       <div className='my-2'>
-        <p>Lore: {character.lore || 0}</p>
+        <p>Lore: {character.lore}</p>
       </div>
+
+      {character.veilWalk && (
+        <div className='my-2'>
+          <p>Veil Walk: {character.veilWalk}</p>
+        </div>
+      )}
     </div>
   );
 }
