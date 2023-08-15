@@ -5,28 +5,30 @@ import points, { Character, Result } from './points';
 
 export type GameState = {
   character: Character,
-  flags: Record<string, boolean>,
   pointId: number,
   points: Record<number, ({
     visited?: true,
     actions?: number[],
   } | undefined)>,
+  clock: number,
+  flags: Record<string, boolean>,
   actionId?: number,
 };
 
 export const initialState: GameState = {
-  pointId: points[0].id,
-  points: {
-    [points[0].id]: {
-      visited: true,
-    },
-  },
   character: {
     body: 0,
     bone: 0,
     blood: 0,
     lore: 0,
   },
+  pointId: points[0].id,
+  points: {
+    [points[0].id]: {
+      visited: true,
+    },
+  },
+  clock: 0,
   flags: {},
 };
 
@@ -74,6 +76,7 @@ export const reducer: Reducer<GameState, StateAction> = (game: GameState, action
             visited: true,
           },
         },
+        clock: game.clock + 1,
       };
       break;
     }
@@ -98,14 +101,17 @@ export const reducer: Reducer<GameState, StateAction> = (game: GameState, action
       newState = {
         ...game,
         actionId: undefined,
+        clock: game.clock + 1,
       };
       break;
     }
 
     case 'apply_result': {
       Object.entries(action.result.character ?? {}).forEach(([key, value]) => {
-        newState.character[key as keyof Character] = (
-          (newState.character[key as keyof Character] || 0) + value);
+        newState.character = {
+          ...newState.character,
+          [key]: (newState.character[key as keyof Character] || 0) + value,
+        };
       });
       newState.flags = { ...newState.flags, ...action.result.flags };
       break;
