@@ -21,6 +21,7 @@ export const initialState: GameState = {
     bone: 0,
     blood: 0,
     lore: 0,
+    veilWalk: 0,
   },
   pointId: points[0].id,
   points: {
@@ -39,6 +40,7 @@ export type StateAction = {
 } | {
   type: 'go_to_point',
   pointId: number,
+  useVeil?: boolean,
 } | {
   type: 'use_action',
   pointId: number,
@@ -76,7 +78,14 @@ export const reducer: Reducer<GameState, StateAction> = (game: GameState, action
             visited: true,
           },
         },
-        clock: game.clock + 1,
+        ...action.useVeil && game.character.veilWalk ? {
+          character: {
+            ...game.character,
+            veilWalk: Math.max(0, game.character.veilWalk - 1),
+          },
+        } : {
+          clock: game.clock + 1,
+        },
       };
       break;
     }

@@ -31,7 +31,7 @@ export type Character = {
   bone: number,
   blood: number,
   lore: number,
-  veilWalk?: number,
+  veilWalk: number,
 };
 
 const points: Point[] = [

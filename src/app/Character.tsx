@@ -20,7 +20,7 @@ export default function Character() {
         <p>Lore: {character.lore}</p>
       </div>
 
-      {character.veilWalk && (
+      {!!character.veilWalk && (
         <div className='my-2 font-black'>
           <p>Veil Walk: {character.veilWalk}</p>
         </div>

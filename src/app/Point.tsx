@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 
 import Button from './components/Button';
 import SplitLines from './components/SplitLines';
@@ -16,16 +16,21 @@ export default function Point() {
     () => (point?.exits ?? []).map(eid => points.find(p => p.id === eid)).filter(exists),
     [point, game.points]);
 
+  const [useVeil, setUseVeil] = useState(false);
+  useEffect(() => {
+    setUseVeil(false);
+  }, [point]);
+
   return point && (
     <div className='Point'>
-      <h2 className='flex items-center justify-center my-8 font-bold'>
-        <span className='w-6 h-6 leading-6 mr-2 bg-black text-white text-xl rounded-full'>
+      <h2 className='flex items-center justify-center my-8'>
+        <span className='w-9 h-9 leading-9 mr-4 bg-black text-white text-3xl rounded-full'>
           {point.id}
         </span>
-        <span className='text-3xl'>{point.name}</span>
+        <span className='text-5xl'>{point.name}</span>
       </h2>
 
-      <div className='text-xl text-left'>
+      <div className='text-xl text-left italic'>
         <SplitLines text={point.description} />
       </div>
 
@@ -52,9 +57,7 @@ export default function Point() {
                 }
               }}
             >
-              <span
-                className={classList('font-black text-xl', used && 'line-through')}
-              >
+              <span className={classList('font-black text-xl', used && 'line-through')}>
                 {action.name}
               </span>
               {used && <span>&nbsp;– Done</span>}
@@ -64,23 +67,37 @@ export default function Point() {
         })}
       </p>
 
-      <p className='w-max mx-auto my-8'>
-        {exits.map(exit => {
-          const visited = !!game.points[exit.id]?.visited;
+      <div className='my-8'>
+        {!!game.character.veilWalk && (
+          <label>
+            Use Veil Walk?
+            <input
+              type='checkbox'
+              className='ml-2'
+              checked={useVeil}
+              onChange={e => setUseVeil(e.target.checked)}
+            />
+          </label>
+        )}
 
-          return (
-            <Button
-              key={exit.id}
-              onClick={() => dispatch({ type: 'go_to_point', pointId: exit.id })}
-            >
-              <span className='w-4 h-4 leading-4 mr-1 bg-black text-white rounded-full'>
-                {exit.id}
-              </span>
-              <span className={!visited ? 'font-black' : undefined}>{exit.name}</span>
-            </Button>
-          );
-        })}
-      </p>
+        <div className='w-max mx-auto my-4'>
+          {exits.map(exit => {
+            const visited = !!game.points[exit.id]?.visited;
+
+            return (
+              <Button
+                key={exit.id}
+                onClick={() => dispatch({ type: 'go_to_point', pointId: exit.id, useVeil })}
+              >
+                <span className='w-4 h-4 leading-4 mr-1 bg-black text-white rounded-full'>
+                  {exit.id}
+                </span>
+                <span className={!visited ? 'font-black' : undefined}>{exit.name}</span>
+              </Button>
+            );
+          })}
+        </div>
+      </div>
     </div>
   );
 }
