@@ -2,19 +2,20 @@ import { useEffect, useMemo, useState } from 'react';
 
 import Button from './components/Button';
 import SplitLines from './components/SplitLines';
-import points, { Character } from '../points';
+import realm from '../realm';
 import { useDispatch, useGameState } from '../state';
+import { Character } from '../types';
 import { classList, exists } from '../utils';
 
 
 export default function Point() {
   const dispatch = useDispatch();
-  const game = useGameState();
+  const state = useGameState();
 
-  const point = points.find(p => p.id === game.pointId);
+  const point = realm.points.find(p => p.id === state.pointId);
   const exits = useMemo(
-    () => (point?.exits ?? []).map(eid => points.find(p => p.id === eid)).filter(exists),
-    [point, game.points]);
+    () => (point?.exits ?? []).map(eid => realm.points.find(p => p.id === eid)).filter(exists),
+    [point, state.points]);
 
   const [useVeil, setUseVeil] = useState(false);
   useEffect(() => {
@@ -38,11 +39,11 @@ export default function Point() {
         {point.actions?.map((action, i) => {
           const unavailable = !!(
             Object.entries(action.requires?.character ?? {})
-              .some(([key, value]) => (game.character[key as keyof Character] || 0) < value)
+              .some(([key, value]) => (state.character[key as keyof Character] || 0) < value)
             || Object.entries(action.requires?.flags ?? {})
-              .some(([key, value]) => !game.flags[key] === value)
+              .some(([key, value]) => !state.flags[key] === value)
           );
-          const used = !!game.points[point.id]?.actions?.includes(action.id);
+          const used = !!state.points[point.id]?.actions?.includes(action.id);
           const disabled = used || unavailable;
 
           return (
@@ -68,7 +69,7 @@ export default function Point() {
       </p>
 
       <div className='my-8'>
-        {!!game.character.veilWalk && (
+        {!!state.character.veilWalk && (
           <label>
             Use Veil Walk?
             <input
@@ -82,7 +83,7 @@ export default function Point() {
 
         <div className='w-max mx-auto my-4'>
           {exits.map(exit => {
-            const visited = !!game.points[exit.id]?.visited;
+            const visited = !!state.points[exit.id]?.visited;
 
             return (
               <Button

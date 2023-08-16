@@ -1,6 +1,7 @@
 import { createContext, Dispatch, Reducer, useContext } from 'react';
 
-import points, { Character, Result } from './points';
+import realm from './realm';
+import { Character, Result } from './types';
 
 
 export type GameState = {
@@ -23,9 +24,9 @@ export const initialState: GameState = {
     lore: 0,
     veilWalk: 0,
   },
-  pointId: points[0].id,
+  pointId: realm.points[0].id,
   points: {
-    [points[0].id]: {
+    [realm.points[0].id]: {
       visited: true,
     },
   },
@@ -52,8 +53,8 @@ export type StateAction = {
   result: Result,
 };
 
-export const reducer: Reducer<GameState, StateAction> = (game: GameState, action: StateAction) => {
-  let newState = game;
+export const reducer: Reducer<GameState, StateAction> = (state: GameState, action: StateAction) => {
+  let newState = state;
 
   switch (action.type) {
     case 'load_saved_game': {
@@ -69,22 +70,22 @@ export const reducer: Reducer<GameState, StateAction> = (game: GameState, action
 
     case 'go_to_point': {
       newState = {
-        ...game,
+        ...state,
         pointId: action.pointId,
         points: {
-          ...game.points,
+          ...state.points,
           [action.pointId]: {
-            ...game.points[action.pointId],
+            ...state.points[action.pointId],
             visited: true,
           },
         },
-        ...action.useVeil && game.character.veilWalk ? {
+        ...action.useVeil && state.character.veilWalk ? {
           character: {
-            ...game.character,
-            veilWalk: Math.max(0, game.character.veilWalk - 1),
+            ...state.character,
+            veilWalk: Math.max(0, state.character.veilWalk - 1),
           },
         } : {
-          clock: game.clock + 1,
+          clock: state.clock + 1,
         },
       };
       break;
@@ -92,13 +93,13 @@ export const reducer: Reducer<GameState, StateAction> = (game: GameState, action
 
     case 'use_action': {
       newState = {
-        ...game,
+        ...state,
         points: {
-          ...game.points,
+          ...state.points,
           [action.pointId]: {
-            ...game.points[action.pointId],
+            ...state.points[action.pointId],
             actions: Array.from(new Set([
-              ...game.points[action.pointId]?.actions ?? [], action.actionId])),
+              ...state.points[action.pointId]?.actions ?? [], action.actionId])),
           },
         },
         actionId: action.actionId,
@@ -108,9 +109,9 @@ export const reducer: Reducer<GameState, StateAction> = (game: GameState, action
 
     case 'clear_action': {
       newState = {
-        ...game,
+        ...state,
         actionId: undefined,
-        clock: game.clock + 1,
+        clock: state.clock + 1,
       };
       break;
     }

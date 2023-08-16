@@ -2,7 +2,7 @@ import { useMemo } from 'react';
 
 import Button from './components/Button';
 import SplitLines from './components/SplitLines';
-import points from '../points';
+import realm from '../realm';
 import { useDispatch, useGameState } from '../state';
 import { signedNum } from '../utils';
 
@@ -10,7 +10,7 @@ import { signedNum } from '../utils';
 export default function Result() {
   const dispatch = useDispatch();
   const { pointId, actionId } = useGameState();
-  const point = useMemo(() => points.find(p => p.id === pointId), [pointId]);
+  const point = useMemo(() => realm.points.find(p => p.id === pointId), [pointId]);
   const action = useMemo(() => point?.actions?.find(a => a.id === actionId), [point, actionId]);
 
   return !(point && action) ? null : (
