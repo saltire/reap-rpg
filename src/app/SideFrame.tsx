@@ -16,12 +16,14 @@ export default function SideFrame() {
         {realm.clocks.map(clock => <Clock key={clock.id} clock={clock} />)}
       </div>
 
-      <Button
-        className='justify-center'
-        onClick={() => dispatch({ type: 'reset_game' })}
-      >
-        Reset
-      </Button>
+      <div>
+        <Button
+          className='justify-center'
+          onClick={() => dispatch({ type: 'reset_game' })}
+        >
+          Reset
+        </Button>
+      </div>
     </div>
   );
 }

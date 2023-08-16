@@ -9,6 +9,7 @@ module.exports = {
 	output: {
 		clean: true,
 		filename: '[name].[contenthash].js',
+    assetModuleFilename: '[name].[contenthash][ext]',
     hashDigestLength: 8,
 	},
 	module: {
@@ -22,6 +23,10 @@ module.exports = {
         test: /\.s?css$/,
         use: [MiniCssExtractPlugin.loader, 'css-loader', 'postcss-loader'],
       },
+			{
+				test: /\.png$/,
+        type: 'asset/resource',
+			},
 		],
 	},
   resolve: {
