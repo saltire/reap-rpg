@@ -1,3 +1,4 @@
+import { acolyte, ashborn, cultist, gaunt, grin } from './enemies';
 import { Realm } from './types';
 
 
@@ -67,6 +68,23 @@ const realm: Realm = {
       name: 'The Pass',
       description: 'A well worn trail leads through the forest, nestled between large rolling hills. An eerie stillness hangs in the air.',
       exits: [2, 4],
+      actions: [
+        {
+          id: 31,
+          name: 'FIGHT',
+          description: 'Creatures loom ahead, congregating together. They have not noticed you, and you could slip by unseen if you wish, or spring an ambush of your own.',
+          fightText: 'If you have Lore 1+, you roll 3d6 Stamina for this fight, keeping whichever two you’d like. In addition, you may start in any space on the grid.',
+          fight: {
+            start: 'E5',
+            terrain: ['A2', 'B4', 'C2', 'C4', 'D1'],
+            enemies: [
+              { ...cultist, start: ['C1'] },
+              { ...gaunt, start: ['B2', 'B3'] },
+              { ...grin, start: ['C'] },
+            ],
+          },
+        },
+      ],
     },
     {
       id: 4,
@@ -90,6 +108,21 @@ const realm: Realm = {
       name: 'The Forest',
       description: 'The dense forest of this realm is teeming with life. It grows unnaturally, as is responding to your presence.',
       exits: [1, 2, 7, 8],
+      actions: [
+        {
+          id: 51,
+          name: 'FIGHT',
+          description: 'The canopy above shields you from the bright sun as you wander the forest. However, a wave of heat warns you of a roaring fire nearby.',
+          fightText: 'This fight cannot be ignored. Once you enter this Point, you must complete this fight if it has not already been won.',
+          fight: {
+            start: 'C5',
+            terrain: ['A1', 'A2', 'A3', 'A4', 'A5', 'E1', 'E2', 'E3', 'E4', 'E5'],
+            enemies: [
+              { ...ashborn, start: ['A2', 'B2', 'C2'] },
+            ],
+          },
+        },
+      ],
     },
     {
       id: 6,
@@ -150,6 +183,25 @@ const realm: Realm = {
       name: 'Acolyte’s Lair',
       description: 'Animal and human bones are woven together to form a complex fortress at the edge of the forest.',
       exits: [4, 5],
+      actions: [
+        {
+          id: 81,
+          name: 'FIGHT',
+          description: '“Grab a book, and sing along.”',
+          fight: {
+            start: 'C5',
+            terrain: ['A1', 'A2', 'A3', 'A4', 'A5', 'B1', 'B5', 'C1', 'D1', 'D5', 'E1', 'E2', 'E3', 'E4', 'E5'],
+            enemies: [
+              { ...acolyte, start: ['C2'] },
+              { ...cultist, start: ['B3', 'C3', 'D3'] },
+            ],
+          },
+          result: {
+            character: { lore: 1 },
+            flags: { acolytesKey: true },
+          },
+        },
+      ],
     },
     {
       id: 600,

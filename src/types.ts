@@ -27,9 +27,39 @@ export type PointAction = {
     flags?: Record<string, boolean>,
   },
   description: string,
+  fightText?: string,
+  fight?: Fight,
   resultText?: string,
   result?: Result,
   choices?: Result[],
+};
+
+export type Fight = {
+  start: string,
+  terrain: string[],
+  enemies: EnemyInstance[],
+};
+
+export type Enemy = {
+  name: string,
+  type?: string,
+  unique?: true,
+  health: number,
+  range?: number[],
+  actions: EnemyAction[],
+  result?: Result,
+  choices?: Result[],
+};
+
+export type EnemyInstance = Enemy & {
+  start: string[],
+};
+
+export type EnemyAction = {
+  roll: number[],
+  move: number,
+  harm: number,
+  range?: number[],
 };
 
 export type Result = {
