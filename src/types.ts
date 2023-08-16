@@ -1,16 +1,25 @@
 export type Realm = {
-  points: Point[],
+  clocks: RealmClock[],
+  points: RealmPoint[],
 };
 
-export type Point = {
+export type RealmClock = {
+  id: number,
+  name: string,
+  fillDescription: string,
+  fillText: string,
+  result?: Result,
+};
+
+export type RealmPoint = {
   id: number,
   name: string,
   description: string,
   exits: number[],
-  actions?: Action[],
+  actions?: PointAction[],
 };
 
-export type Action = {
+export type PointAction = {
   id: number,
   name: string,
   requires?: {

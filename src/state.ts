@@ -11,9 +11,11 @@ export type GameState = {
     visited?: true,
     actions?: number[],
   } | undefined)>,
-  clock: number,
-  flags: Record<string, boolean>,
   actionId?: number,
+  clockSegments: number,
+  clockEffects?: number[],
+  clockEffectId?: number,
+  flags: Record<string, boolean>,
 };
 
 export const initialState: GameState = {
@@ -30,7 +32,7 @@ export const initialState: GameState = {
       visited: true,
     },
   },
-  clock: 0,
+  clockSegments: 0,
   flags: {},
 };
 
@@ -51,10 +53,15 @@ export type StateAction = {
 } | {
   type: 'apply_result',
   result: Result,
+} | {
+  type: 'apply_clock_effect',
+  clockId: number,
+} | {
+  type: 'clear_clock_effect',
 };
 
 export const reducer: Reducer<GameState, StateAction> = (state: GameState, action: StateAction) => {
-  let newState = state;
+  let newState = { ...state };
 
   switch (action.type) {
     case 'load_saved_game': {
@@ -69,61 +76,64 @@ export const reducer: Reducer<GameState, StateAction> = (state: GameState, actio
     }
 
     case 'go_to_point': {
-      newState = {
-        ...state,
-        pointId: action.pointId,
-        points: {
-          ...state.points,
-          [action.pointId]: {
-            ...state.points[action.pointId],
-            visited: true,
-          },
-        },
-        ...action.useVeil && state.character.veilWalk ? {
-          character: {
-            ...state.character,
-            veilWalk: Math.max(0, state.character.veilWalk - 1),
-          },
-        } : {
-          clock: state.clock + 1,
+      newState.pointId = action.pointId;
+      newState.points = {
+        ...state.points,
+        [action.pointId]: {
+          ...state.points[action.pointId],
+          visited: true,
         },
       };
+      if (action.useVeil && state.character.veilWalk) {
+        newState.character = {
+          ...state.character,
+          veilWalk: Math.max(0, state.character.veilWalk - 1),
+        };
+      }
+      else {
+        newState.clockSegments += 1;
+      }
       break;
     }
 
     case 'use_action': {
-      newState = {
-        ...state,
-        points: {
-          ...state.points,
-          [action.pointId]: {
-            ...state.points[action.pointId],
-            actions: Array.from(new Set([
-              ...state.points[action.pointId]?.actions ?? [], action.actionId])),
-          },
+      newState.points = {
+        ...state.points,
+        [action.pointId]: {
+          ...state.points[action.pointId],
+          actions: Array.from(new Set([
+            ...state.points[action.pointId]?.actions ?? [], action.actionId])),
         },
-        actionId: action.actionId,
       };
+      newState.actionId = action.actionId;
       break;
     }
 
     case 'clear_action': {
-      newState = {
-        ...state,
-        actionId: undefined,
-        clock: state.clock + 1,
-      };
+      newState.actionId = undefined;
+      newState.clockSegments += 1;
       break;
     }
 
     case 'apply_result': {
       Object.entries(action.result.character ?? {}).forEach(([key, value]) => {
         newState.character = {
-          ...newState.character,
-          [key]: (newState.character[key as keyof Character] || 0) + value,
+          ...state.character,
+          [key]: Math.max(0, (state.character[key as keyof Character] || 0) + value),
         };
       });
-      newState.flags = { ...newState.flags, ...action.result.flags };
+      newState.flags = { ...state.flags, ...action.result.flags };
+      break;
+    }
+
+    case 'apply_clock_effect': {
+      newState.clockEffectId = action.clockId;
+      newState.clockEffects = Array.from(new Set([...state.clockEffects ?? [], action.clockId]));
+      break;
+    }
+
+    case 'clear_clock_effect': {
+      newState.clockEffectId = undefined;
       break;
     }
 

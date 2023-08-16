@@ -13,7 +13,7 @@ export default function Result() {
   const point = useMemo(() => realm.points.find(p => p.id === pointId), [pointId]);
   const action = useMemo(() => point?.actions?.find(a => a.id === actionId), [point, actionId]);
 
-  return !(point && action) ? null : (
+  return point && action && (
     <div className='Action'>
       <h2 className='flex items-center justify-center my-8 font-bold'>
         <span className='w-6 h-6 leading-6 mr-2 bg-black text-white text-xl rounded-full'>
@@ -37,7 +37,7 @@ export default function Result() {
         </div>
       )}
 
-      <p className='w-max mx-auto my-8'>
+      <div className='w-max mx-auto my-8'>
         {action.choices ? (
           action.choices.map(choice => (
             <Button
@@ -54,11 +54,9 @@ export default function Result() {
             </Button>
           ))
         ) : (
-          <Button onClick={() => dispatch({ type: 'clear_action' })}>
-            Return
-          </Button>
+          <Button onClick={() => dispatch({ type: 'clear_action' })}>Return</Button>
         )}
-      </p>
+      </div>
     </div>
   );
 }

@@ -2,6 +2,28 @@ import { Realm } from './types';
 
 
 const realm: Realm = {
+  clocks: [
+    {
+      id: 1,
+      name: 'Clock 1',
+      fillDescription: 'The sound of an unholy choir rings out through the air, starting in the east, with a response from the south.',
+      fillText: 'Lose one of each component you are currently carrying.',
+      result: { character: { body: -1, bone: -1, blood: -1 } },
+    },
+    {
+      id: 2,
+      name: 'Clock 2',
+      fillDescription: 'The sky darkens as a rolling fog covers the land.',
+      fillText: 'No immediate effects observed.',
+      result: { flags: { clock2Filled: true } },
+    },
+    {
+      id: 3,
+      name: 'Clock 3',
+      fillDescription: 'Your vision swirls as a hymn rings loudly in your ears. Dropping to your knees, you pass out.',
+      fillText: 'Wake in the church at Point 6. You must now face the Horror, and can complete no other actions or move to other Points.',
+    },
+  ],
   points: [
     {
       id: 1,
@@ -31,6 +53,7 @@ const realm: Realm = {
         {
           id: 21,
           name: 'LEARN',
+          requires: { flags: { clock2Filled: false } },
           description: 'One local is willing to meet with you. “Necromancer...we’ve not seen one like you in a while. Please, they don’t realize it. Their prayers will be the death of us.”',
           resultText: 'Increase Lore +1.',
           result: {
