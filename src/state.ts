@@ -15,6 +15,7 @@ export type GameState = {
   clockSegments: number,
   clockEffects?: number[],
   clockEffectId?: number,
+  counters: Record<string, number>,
   flags: Record<string, boolean>,
 };
 
@@ -24,7 +25,6 @@ export const initialState: GameState = {
     bone: 0,
     blood: 0,
     lore: 0,
-    veilWalk: 0,
   },
   pointId: realm.points[0].id,
   points: {
@@ -33,7 +33,14 @@ export const initialState: GameState = {
     },
   },
   clockSegments: 0,
+  counters: {},
   flags: {},
+};
+
+const charMax: Record<string, number | undefined> = {
+  body: 3,
+  bone: 3,
+  blood: 3,
 };
 
 export type StateAction = {
@@ -84,10 +91,10 @@ export const reducer: Reducer<GameState, StateAction> = (state: GameState, actio
           visited: true,
         },
       };
-      if (action.useVeil && state.character.veilWalk) {
-        newState.character = {
-          ...state.character,
-          veilWalk: Math.max(0, state.character.veilWalk - 1),
+      if (action.useVeil && state.counters.veilWalk) {
+        newState.counters = {
+          ...state.counters,
+          veilWalk: Math.max(0, state.counters.veilWalk - 1),
         };
       }
       else {
@@ -119,7 +126,14 @@ export const reducer: Reducer<GameState, StateAction> = (state: GameState, actio
       Object.entries(action.result.character ?? {}).forEach(([key, value]) => {
         newState.character = {
           ...state.character,
-          [key]: Math.max(0, (state.character[key as keyof Character] || 0) + value),
+          [key]: Math.max(0, Math.min(charMax[key] ?? Infinity,
+            (state.character[key as keyof Character] || 0) + value)),
+        };
+      });
+      Object.entries(action.result.counters ?? {}).forEach(([key, value]) => {
+        newState.counters = {
+          ...state.counters,
+          [key]: Math.max(0, (state.counters[key] || 0) + value),
         };
       });
       newState.flags = { ...state.flags, ...action.result.flags };

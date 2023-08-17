@@ -1,8 +1,17 @@
+import realm from '../realm';
 import { useGameState } from '../state';
 
 
 export default function Character() {
-  const { character } = useGameState();
+  const { character, counters, flags } = useGameState();
+
+  const counterLines = Object.entries(realm.counterLabels ?? {})
+    .filter(([key]) => counters[key])
+    .map(([key, label]) => `${label}: ${counters[key]}`);
+
+  const flagLines = Object.entries(realm.flagLabels ?? {})
+    .filter(([key]) => flags[key])
+    .map(([, label]) => label);
 
   return (
     <div className='Character'>
@@ -20,9 +29,15 @@ export default function Character() {
         <p>Lore: {character.lore}</p>
       </div>
 
-      {!!character.veilWalk && (
+      {!!counterLines.length && (
         <div className='my-2 font-black'>
-          <p>Veil Walk: {character.veilWalk}</p>
+          {counterLines.map(line => (<p key={line}>{line}</p>))}
+        </div>
+      )}
+
+      {!!flagLines.length && (
+        <div className='my-2 font-black'>
+          {flagLines.map(line => (<p key={line}>{line}</p>))}
         </div>
       )}
     </div>

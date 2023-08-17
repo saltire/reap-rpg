@@ -1,6 +1,8 @@
 export type Realm = {
   clocks: RealmClock[],
   points: RealmPoint[],
+  counterLabels?: Record<string, string>,
+  flagLabels?: Record<string, string>,
 };
 
 export type RealmClock = {
@@ -21,14 +23,15 @@ export type RealmPoint = {
 
 export type PointAction = {
   id: number,
-  name: string,
+  name: 'DELVE' | 'FIGHT' | 'LEARN' | 'SEARCH',
   requires?: {
     character?: Partial<Character>,
     flags?: Record<string, boolean>,
-  },
+  }[],
   description: string,
   fightText?: string,
   fight?: Fight,
+  preventMove?: true,
   resultText?: string,
   result?: Result,
   choices?: Result[],
@@ -65,6 +68,7 @@ export type EnemyAction = {
 export type Result = {
   // description?: string,
   character?: Partial<Character>,
+  counters?: Record<string, number>,
   flags?: Record<string, boolean>,
   moveTo?: number,
 };
@@ -74,5 +78,4 @@ export type Character = {
   bone: number,
   blood: number,
   lore: number,
-  veilWalk: number,
 };

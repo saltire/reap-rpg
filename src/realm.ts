@@ -54,11 +54,28 @@ const realm: Realm = {
         {
           id: 21,
           name: 'LEARN',
-          requires: { flags: { clock2Filled: false } },
+          requires: [{ flags: { clock2Filled: false } }],
           description: 'One local is willing to meet with you. “Necromancer...we’ve not seen one like you in a while. Please, they don’t realize it. Their prayers will be the death of us.”',
           resultText: 'Increase Lore +1.',
           result: {
             character: { lore: 1 },
+          },
+        },
+        {
+          id: 22,
+          name: 'DELVE',
+          requires: [
+            { flags: { clock2Filled: true } },
+            { flags: { acolytesKey: true } },
+          ],
+          description: 'Barricades surround a home, a makeshift defense put up by the townsfolk. As you turn the key, you hear a roar from inside.',
+          fight: {
+            start: 'E3',
+            terrain: ['B2', 'B3', 'C2', 'C3', 'E1', 'E2', 'E4', 'E5'],
+            enemies: [
+              { ...cultist, start: ['B1', 'B4'] },
+              { ...ashborn, start: ['A2'] },
+            ],
           },
         },
       ],
@@ -97,9 +114,7 @@ const realm: Realm = {
           name: 'SEARCH',
           description: 'A current from the veil blows between the trees here, coalescing in this meadow. You reach out, and capture a bit of it in a bottle.',
           resultText: 'Gain Veil Walk, two uses. When you use this during exploration, you do not mark the Horror Clock when you move between Points.',
-          result: {
-            character: { veilWalk: 2 },
-          },
+          result: { counters: { veilWalk: 2 } },
         },
       ],
     },
@@ -114,6 +129,7 @@ const realm: Realm = {
           name: 'FIGHT',
           description: 'The canopy above shields you from the bright sun as you wander the forest. However, a wave of heat warns you of a roaring fire nearby.',
           fightText: 'This fight cannot be ignored. Once you enter this Point, you must complete this fight if it has not already been won.',
+          preventMove: true,
           fight: {
             start: 'C5',
             terrain: ['A1', 'A2', 'A3', 'A4', 'A5', 'E1', 'E2', 'E3', 'E4', 'E5'],
@@ -121,6 +137,7 @@ const realm: Realm = {
               { ...ashborn, start: ['A2', 'B2', 'C2'] },
             ],
           },
+          result: { character: { body: 3, bone: 3, blood: 3 } },
         },
       ],
     },
@@ -144,7 +161,7 @@ const realm: Realm = {
         {
           id: 62,
           name: 'DELVE',
-          requires: { character: { lore: 2 } },
+          requires: [{ character: { lore: 2 } }],
           description: 'You know the way to the organ in the church, and can damage it. When you face the Horror, they do not have access to their *Organ* special ability.',
           result: {
             flags: { disableOrgan: true },
@@ -210,6 +227,12 @@ const realm: Realm = {
       exits: [],
     },
   ],
+  counterLabels: {
+    veilWalk: 'Veil Walk',
+  },
+  flagLabels: {
+    acolytesKey: 'Acolyte’s Key',
+  },
 };
 
 export default realm;

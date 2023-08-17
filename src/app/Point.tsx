@@ -4,7 +4,7 @@ import Button from './components/Button';
 import SplitLines from './components/SplitLines';
 import realm from '../realm';
 import { useDispatch, useGameState } from '../state';
-import { Character } from '../types';
+import { Character, PointAction } from '../types';
 import { classList, exists } from '../utils';
 
 
@@ -22,6 +22,23 @@ export default function Point() {
     setUseVeil(false);
   }, [point]);
 
+  // Check action requirements (fail if ALL are unmet, pass if ANY are met).
+  const reqsMet = (action: PointAction) => !(action.requires?.length
+    && action.requires.every(require => (
+      // Check character.
+      Object.entries(require.character ?? {})
+        .some(([key, value]) => (state.character[key as keyof Character] || 0) < value)
+      // Check flags.
+      || Object.entries(require.flags ?? {})
+        .some(([key, value]) => !state.flags[key] === value)
+    )));
+
+  const actionUsed = (action: PointAction) => point
+    && !!state.points[point.id]?.actions?.includes(action.id);
+
+  const preventMove = useMemo(() => point?.actions?.some(a => a.preventMove && !actionUsed(a)),
+    [point]);
+
   return point && (
     <div className='Point'>
       <h2 className='flex items-center justify-center my-8'>
@@ -38,12 +55,12 @@ export default function Point() {
       <p className='w-max mx-auto my-8'>
         {point.actions?.map((action, i) => {
           const unavailable = !!(
-            Object.entries(action.requires?.character ?? {})
-              .some(([key, value]) => (state.character[key as keyof Character] || 0) < value)
-            || Object.entries(action.requires?.flags ?? {})
-              .some(([key, value]) => !state.flags[key] === value)
+            // Check action requirements.
+            !reqsMet(action)
+            // Check other actions for unresolved fights.
+            || (action.name !== 'FIGHT' && point.actions?.some(a => a.name === 'FIGHT'))
           );
-          const used = !!state.points[point.id]?.actions?.includes(action.id);
+          const used = actionUsed(action);
           const disabled = used || unavailable;
 
           return (
@@ -69,7 +86,7 @@ export default function Point() {
       </p>
 
       <div className='my-8'>
-        {!!state.character.veilWalk && (
+        {!!state.counters.veilWalk && (
           <label>
             Use Veil Walk?
             <input
@@ -88,9 +105,11 @@ export default function Point() {
             return (
               <Button
                 key={exit.id}
+                className={preventMove ? 'text-zinc-500' : undefined}
+                disabled={preventMove}
                 onClick={() => dispatch({ type: 'go_to_point', pointId: exit.id, useVeil })}
               >
-                <span className='w-4 h-4 leading-4 mr-1 bg-black text-white rounded-full'>
+                <span className={`w-4 h-4 leading-4 mr-1 ${preventMove ? 'bg-zinc-500' : 'bg-black'} text-white rounded-full`}>
                   {exit.id}
                 </span>
                 <span className={!visited ? 'font-black' : undefined}>{exit.name}</span>
