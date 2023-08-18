@@ -15,7 +15,7 @@ export default function Character() {
 
   return (
     <div className='Character'>
-      <h2 className='my-8 font-semi text-3xl'>
+      <h2 className='my-8 font-semi text-3xl text-center'>
         Character
       </h2>
 

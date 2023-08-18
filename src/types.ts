@@ -1,4 +1,7 @@
 export type Realm = {
+  vessel: {
+    triggers: Requirement[],
+  },
   clocks: RealmClock[],
   points: RealmPoint[],
   counterLabels?: Record<string, string>,
@@ -24,10 +27,7 @@ export type RealmPoint = {
 export type PointAction = {
   id: number,
   name: 'DELVE' | 'FIGHT' | 'LEARN' | 'SEARCH',
-  requires?: {
-    character?: Partial<Character>,
-    flags?: Record<string, boolean>,
-  }[],
+  requires?: Requirement[],
   description: string,
   fightText?: string,
   fight?: Fight,
@@ -66,11 +66,17 @@ export type EnemyAction = {
 };
 
 export type Result = {
-  // description?: string,
   character?: Partial<Character>,
   counters?: Record<string, number>,
   flags?: Record<string, boolean>,
   moveTo?: number,
+};
+
+export type Requirement = {
+  character?: Partial<Character>,
+  counters?: Record<string, number>,
+  flags?: Record<string, boolean>,
+  componentTotal?: number,
 };
 
 export type Character = {

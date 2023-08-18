@@ -1,11 +1,12 @@
 import { createContext, Dispatch, Reducer, useContext } from 'react';
 
 import realm from './realm';
-import { Character, Result } from './types';
+import { Character, Requirement, Result } from './types';
 
 
 export type GameState = {
   character: Character,
+  vessel: number,
   pointId: number,
   points: Record<number, ({
     visited?: true,
@@ -26,6 +27,7 @@ export const initialState: GameState = {
     blood: 0,
     lore: 0,
   },
+  vessel: 0,
   pointId: realm.points[0].id,
   points: {
     [realm.points[0].id]: {
@@ -37,11 +39,22 @@ export const initialState: GameState = {
   flags: {},
 };
 
-const charMax: Record<string, number | undefined> = {
+const compMax: Record<string, number | undefined> = {
   body: 3,
   bone: 3,
   blood: 3,
 };
+
+export const requirementMet = (req: Requirement, state: GameState) => !!(
+  (Object.entries(req.character ?? {})
+    .every(([key, value]) => (state.character[key as keyof Character] || 0) >= value))
+  && (Object.entries(req.counters ?? {})
+    .every(([key, value]) => state.counters[key] >= value))
+  && (Object.entries(req.flags ?? {})
+    .every(([key, value]) => state.flags[key] === value))
+  && (req.componentTotal === undefined
+    || state.character.body + state.character.bone + state.character.blood >= req.componentTotal)
+);
 
 export type StateAction = {
   type: 'load_saved_game',
@@ -85,16 +98,16 @@ export const reducer: Reducer<GameState, StateAction> = (state: GameState, actio
     case 'go_to_point': {
       newState.pointId = action.pointId;
       newState.points = {
-        ...state.points,
+        ...newState.points,
         [action.pointId]: {
-          ...state.points[action.pointId],
+          ...newState.points[action.pointId],
           visited: true,
         },
       };
-      if (action.useVeil && state.counters.veilWalk) {
+      if (action.useVeil && newState.counters.veilWalk) {
         newState.counters = {
-          ...state.counters,
-          veilWalk: Math.max(0, state.counters.veilWalk - 1),
+          ...newState.counters,
+          veilWalk: Math.max(0, newState.counters.veilWalk - 1),
         };
       }
       else {
@@ -105,11 +118,11 @@ export const reducer: Reducer<GameState, StateAction> = (state: GameState, actio
 
     case 'use_action': {
       newState.points = {
-        ...state.points,
+        ...newState.points,
         [action.pointId]: {
-          ...state.points[action.pointId],
+          ...newState.points[action.pointId],
           actions: Array.from(new Set([
-            ...state.points[action.pointId]?.actions ?? [], action.actionId])),
+            ...newState.points[action.pointId]?.actions ?? [], action.actionId])),
         },
       };
       newState.actionId = action.actionId;
@@ -123,26 +136,34 @@ export const reducer: Reducer<GameState, StateAction> = (state: GameState, actio
     }
 
     case 'apply_result': {
+      console.log(action.result);
       Object.entries(action.result.character ?? {}).forEach(([key, value]) => {
         newState.character = {
-          ...state.character,
-          [key]: Math.max(0, Math.min(charMax[key] ?? Infinity,
-            (state.character[key as keyof Character] || 0) + value)),
+          ...newState.character,
+          [key]: Math.max(0, Math.min(compMax[key] ?? Infinity,
+            (newState.character[key as keyof Character] || 0) + value)),
         };
       });
       Object.entries(action.result.counters ?? {}).forEach(([key, value]) => {
         newState.counters = {
-          ...state.counters,
-          [key]: Math.max(0, (state.counters[key] || 0) + value),
+          ...newState.counters,
+          [key]: Math.max(0, (newState.counters[key] || 0) + value),
         };
       });
-      newState.flags = { ...state.flags, ...action.result.flags };
+      newState.flags = { ...newState.flags, ...action.result.flags };
+
+      realm.vessel.triggers.forEach(req => {
+        if (requirementMet(req, newState) && !requirementMet(req, state)) {
+          newState.vessel += 1;
+        }
+      });
+
       break;
     }
 
     case 'apply_clock_effect': {
       newState.clockEffectId = action.clockId;
-      newState.clockEffects = Array.from(new Set([...state.clockEffects ?? [], action.clockId]));
+      newState.clockEffects = Array.from(new Set([...newState.clockEffects ?? [], action.clockId]));
       break;
     }
 

@@ -1,9 +1,10 @@
 import { useEffect, useReducer, useState } from 'react';
 import { IoMapOutline } from 'react-icons/io5';
 
+import LeftFrame from './LeftFrame';
 import MainFrame from './MainFrame';
 import Map from './Map';
-import SideFrame from './SideFrame';
+import RightFrame from './RightFrame';
 import { reducer, GameStateContext, DispatchContext, initialState } from '../state';
 
 
@@ -38,8 +39,9 @@ export default function App() {
           </header>
 
           <main className='flex flex-grow overflow-hidden'>
-            <SideFrame />
+            <LeftFrame />
             <MainFrame />
+            <RightFrame />
           </main>
         </div>
       </DispatchContext.Provider>

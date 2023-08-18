@@ -3,6 +3,13 @@ import { Realm } from './types';
 
 
 const realm: Realm = {
+  vessel: {
+    triggers: [
+      { character: { lore: 2 } },
+      { flags: { horrorName: true } },
+      { componentTotal: 2 },
+    ],
+  },
   clocks: [
     {
       id: 1,
