@@ -10,8 +10,8 @@ export default {
     extend: {
       fontWeight: {
         normal: '400',
-        bold: '600',
-        black: '700',
+        semi: '600',
+        bold: '700',
       },
       rotate: {
         30: '30deg',

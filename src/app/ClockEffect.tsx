@@ -13,7 +13,7 @@ export default function ClockEffect() {
 
   return clock && (
     <div className='ClockEffect'>
-      <h3 className='my-8 font-bold text-2xl uppercase'>
+      <h3 className='my-8 font-semi text-2xl uppercase'>
         {clock.name} Filled
       </h3>
 

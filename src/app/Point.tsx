@@ -75,7 +75,7 @@ export default function Point() {
                 }
               }}
             >
-              <span className={classList('font-black text-xl', used && 'line-through')}>
+              <span className={classList('font-bold text-xl', used && 'line-through')}>
                 {action.name}
               </span>
               {used && <span>&nbsp;– Done</span>}
@@ -112,7 +112,7 @@ export default function Point() {
                 <span className={`w-4 h-4 leading-4 mr-1 ${preventMove ? 'bg-zinc-500' : 'bg-black'} text-white rounded-full`}>
                   {exit.id}
                 </span>
-                <span className={!visited ? 'font-black' : undefined}>{exit.name}</span>
+                <span className={!visited ? 'font-bold' : undefined}>{exit.name}</span>
               </Button>
             );
           })}

@@ -1,6 +1,7 @@
 import { createRoot } from 'react-dom/client';
 import Modal from 'react-modal';
 
+import './fonts.css';
 import './index.css';
 import App from './app/App';
 

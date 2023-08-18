@@ -15,28 +15,28 @@ export default function Character() {
 
   return (
     <div className='Character'>
-      <h2 className='my-8 font-bold text-3xl'>
+      <h2 className='my-8 font-semi text-3xl'>
         Character
       </h2>
 
-      <div className='my-2 font-black'>
+      <div className='my-2 font-bold'>
         <p>Body: {character.body}</p>
         <p>Bone: {character.bone}</p>
         <p>Blood: {character.blood}</p>
       </div>
 
-      <div className='my-2 font-black'>
+      <div className='my-2 font-bold'>
         <p>Lore: {character.lore}</p>
       </div>
 
       {!!counterLines.length && (
-        <div className='my-2 font-black'>
+        <div className='my-2 font-bold'>
           {counterLines.map(line => (<p key={line}>{line}</p>))}
         </div>
       )}
 
       {!!flagLines.length && (
-        <div className='my-2 font-black'>
+        <div className='my-2 font-bold'>
           {flagLines.map(line => (<p key={line}>{line}</p>))}
         </div>
       )}

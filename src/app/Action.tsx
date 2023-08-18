@@ -15,13 +15,13 @@ export default function Result() {
 
   return point && action && (
     <div className='Action'>
-      <h2 className='flex items-center justify-center my-8 font-bold'>
+      <h2 className='flex items-center justify-center my-8 font-semi'>
         <span className='w-6 h-6 leading-6 mr-2 bg-black text-white text-xl rounded-full'>
           {point.id}
         </span>
         <span className='text-3xl'>{point.name}</span>
       </h2>
-      <h3 className='my-8 font-bold text-2xl'>
+      <h3 className='my-8 font-semi text-2xl'>
         {action.name}
       </h3>
 
@@ -42,7 +42,7 @@ export default function Result() {
           action.choices.map(choice => (
             <Button
               key={JSON.stringify(choice)}
-              className='font-black capitalize'
+              className='font-bold capitalize'
               onClick={() => {
                 dispatch({ type: 'apply_result', result: choice });
                 dispatch({ type: 'clear_action' });
