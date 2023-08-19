@@ -1,8 +1,310 @@
-import { acolyte, ashborn, cultist, gaunt, grin } from './enemies';
-import { Realm } from './types';
+import { Enemy, Realm } from './types';
 
+
+const acolyte: Enemy = {
+  name: 'Acolyte',
+  unique: true,
+  health: 9,
+  actions: [
+    {
+      roll: [1, 2],
+      move: 1,
+      harm: 1,
+      range: [0, 1],
+    },
+    {
+      roll: [3, 4],
+      move: 1,
+      harm: 2,
+      range: [2, 3, 4],
+    },
+    {
+      roll: [5, 6],
+      move: 2,
+      harm: 2,
+      range: [0, 1],
+    },
+  ],
+  choices: [
+    { character: { body: 1 } },
+    { character: { bone: 1 } },
+    { character: { blood: 1 } },
+  ],
+};
+
+const ashborn: Enemy = {
+  name: 'Ashborn',
+  type: 'Monster',
+  health: 4,
+  range: [0, 1],
+  actions: [
+    {
+      roll: [1, 2],
+      move: 1,
+      harm: 1,
+    },
+    {
+      roll: [3, 5],
+      move: 2,
+      harm: 1,
+    },
+    {
+      roll: [6],
+      move: 1,
+      harm: 3,
+    },
+  ],
+  result: { character: { body: 1 } },
+};
+
+const cultist: Enemy = {
+  name: 'Cultist',
+  type: 'Human',
+  health: 3,
+  range: [0, 1],
+  actions: [
+    {
+      roll: [1, 2, 3],
+      move: 1,
+      harm: 1,
+    },
+    {
+      roll: [4, 5],
+      move: 1,
+      harm: 2,
+    },
+    {
+      roll: [6],
+      move: 2,
+      harm: 2,
+    },
+  ],
+  choices: [
+    { character: { body: 1 } },
+    { character: { bone: 1 } },
+    { character: { blood: 1 } },
+  ],
+};
+
+const gaunt: Enemy = {
+  name: 'Gaunt',
+  type: 'Undead',
+  health: 3,
+  range: [1],
+  actions: [
+    {
+      roll: [1, 2, 3],
+      move: 1,
+      harm: 2,
+    },
+    {
+      roll: [4, 5, 6],
+      move: 2,
+      harm: 4,
+    },
+  ],
+  result: { character: { body: 1, bone: 1 } },
+};
+
+const grin: Enemy = {
+  name: 'Grin',
+  type: 'Demon',
+  health: 5,
+  range: [2, 3],
+  actions: [
+    {
+      roll: [1, 2, 3, 4, 5, 6],
+      move: 1,
+      harm: 1,
+    },
+  ],
+  choices: [
+    { character: { body: 1 } },
+    { character: { bone: 1 } },
+    { character: { blood: 1 } },
+  ],
+};
 
 const realm: Realm = {
+  weapons: [
+    {
+      name: 'Scythe',
+      type: 'Blade',
+      range: [1],
+      actions: [
+        {
+          roll: [2, 3],
+          move: 1,
+          harm: 1,
+        },
+        {
+          roll: [4, 5],
+          move: 1,
+          harm: 2,
+        },
+        {
+          roll: [6],
+          move: 2,
+          harm: 2,
+        },
+      ],
+      abilities: [{
+        name: 'Reave',
+        description: 'Immediately reap any enemy killed with Scythe. Those components may be used with a spell you are currently casting.',
+      }],
+    },
+  ],
+  relics: [
+    {
+      name: 'Neophyte’s Tome',
+      effects: [
+        {
+          cost: { bone: 1 },
+          benefit: { block: 1 },
+        },
+        {
+          cost: { body: 1 },
+          benefit: { move: 1 },
+        },
+        {
+          cost: { blood: 1 },
+          benefit: { heal: 1 },
+        },
+      ],
+    },
+  ],
+  spells: [
+    {
+      name: 'Summon Skeleton',
+      range: [1],
+      actions: [
+        {
+          roll: [4, 5, 6],
+          description: 'Summon a Skeleton in any empty adjacent space. Every round, Skeleton can Move 1, Harm1,at0or1range.\n\nSkeleton has 2 Health.',
+        },
+      ],
+      effects: [
+        {
+          cost: { body: 1 },
+          description: '+2 Health',
+        },
+        {
+          cost: { bone: 1 },
+          description: '+1 Harm and +1 Health',
+        },
+      ],
+    },
+    {
+      name: 'Spectral Step',
+      actions: [
+        {
+          roll: [3, 4, 5],
+          description: 'Moveupto3 spaces. Every enemy whose space you move into is Haunted.',
+        },
+        {
+          cost: { body: 1 },
+          roll: [1],
+          description: 'Move to any empty space on the grid.',
+        },
+      ],
+      abilities: [
+        {
+          name: 'Haunted',
+          description: 'Enemy takes +1 Harm this round. Next round, they cannot move.',
+        },
+      ],
+    },
+    {
+      name: 'Spikes',
+      range: [2, 3],
+      actions: [
+        {
+          roll: [2, 3],
+          description: 'Harm 1',
+        },
+        {
+          roll: [4, 5],
+          description: 'Harm 2',
+        },
+        {
+          roll: [6],
+          description: 'Harm 3',
+        },
+      ],
+      effects: [
+        {
+          cost: { bone: 1 },
+          description: '+1 Harm or +1 Range',
+        },
+      ],
+    },
+    {
+      name: 'Leech',
+      range: [2, 3],
+      actions: [
+        {
+          roll: [3, 4, 5],
+          description: 'Drain 2',
+        },
+        {
+          roll: [6],
+          description: 'Drain 3',
+        },
+      ],
+      abilities: [
+        {
+          name: 'Drain',
+          description: 'Deal Harm equal to Drain, and heal that much.',
+        },
+      ],
+      effects: [
+        {
+          cost: { blood: 1 },
+          description: 'Increase Drain +1',
+        },
+      ],
+    },
+    {
+      name: 'Terror',
+      range: [1],
+      actions: [
+        {
+          cost: { body: 1 },
+          roll: [3],
+          description: 'All enemies within range deal 0 Harm this round.',
+        },
+        {
+          roll: [4, 5, 6],
+          description: 'All enemies within range deal 0 Harm this round.',
+        },
+      ],
+      effects: [
+        {
+          cost: { body: 1 },
+          description: 'Includes range 2 as well.',
+        },
+      ],
+    },
+    {
+      name: 'Explode Corpse',
+      actions: [
+        {
+          roll: [3, 4, 5, 6],
+          description: 'Choose a corpse. It explodes, dealing 2 Harm to all Adjacent enemies. Remove corpse afterward.',
+        },
+      ],
+      effects: [
+        {
+          cost: { bone: 1 },
+          description: '+1 Harm',
+        },
+        {
+          cost: { blood: 1 },
+          description: 'Heal 1 for each enemy killed',
+        },
+      ],
+    },
+  ],
   vessel: {
     triggers: [
       { character: { lore: 2 } },

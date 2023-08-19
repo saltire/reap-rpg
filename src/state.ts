@@ -1,11 +1,12 @@
 import { createContext, Dispatch, Reducer, useContext } from 'react';
 
 import realm from './realm';
-import { Character, Requirement, Result } from './types';
+import { Character, Equipment, Requirement, Result } from './types';
 
 
 export type GameState = {
   character: Character,
+  equipment?: Equipment,
   vessel: number,
   pointId: number,
   points: Record<number, ({
@@ -22,10 +23,12 @@ export type GameState = {
 
 export const initialState: GameState = {
   character: {
-    body: 0,
-    bone: 0,
-    blood: 0,
+    health: 10,
+    stamina: 2,
     lore: 0,
+    body: 1,
+    bone: 1,
+    blood: 1,
   },
   vessel: 0,
   pointId: realm.points[0].id,
@@ -61,6 +64,9 @@ export type StateAction = {
 } | {
   type: 'reset_game',
 } | {
+  type: 'set_equipment',
+  equipment: Equipment,
+} | {
   type: 'go_to_point',
   pointId: number,
   useVeil?: boolean,
@@ -92,6 +98,11 @@ export const reducer: Reducer<GameState, StateAction> = (state: GameState, actio
 
     case 'reset_game': {
       newState = initialState;
+      break;
+    }
+
+    case 'set_equipment': {
+      newState = { ...newState, equipment: action.equipment };
       break;
     }
 

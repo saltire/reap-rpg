@@ -2,12 +2,15 @@ import realm from '../realm';
 import { useGameState } from '../state';
 
 
+function StatLine({ label, value }: { label: string, value: number }) {
+  return <p className='flex justify-between'><span>{label}</span><span>{value}</span></p>;
+}
+
 export default function Character() {
   const { character, counters, flags } = useGameState();
 
   const counterLines = Object.entries(realm.counterLabels ?? {})
-    .filter(([key]) => counters[key])
-    .map(([key, label]) => `${label}: ${counters[key]}`);
+    .filter(([key]) => counters[key]);
 
   const flagLines = Object.entries(realm.flagLabels ?? {})
     .filter(([key]) => flags[key])
@@ -19,25 +22,28 @@ export default function Character() {
         Character
       </h2>
 
-      <div className='my-2 font-bold'>
-        <p>Body: {character.body}</p>
-        <p>Bone: {character.bone}</p>
-        <p>Blood: {character.blood}</p>
+      <div className='my-4 font-bold'>
+        <StatLine label='Health' value={character.health} />
+        <StatLine label='Stamina' value={character.stamina} />
+        <StatLine label='Lore' value={character.lore} />
       </div>
 
-      <div className='my-2 font-bold'>
-        <p>Lore: {character.lore}</p>
+      <div className='my-4 font-bold'>
+        <StatLine label='Body' value={character.body} />
+        <StatLine label='Bone' value={character.bone} />
+        <StatLine label='Blood' value={character.blood} />
       </div>
 
       {!!counterLines.length && (
-        <div className='my-2 font-bold'>
-          {counterLines.map(line => (<p key={line}>{line}</p>))}
+        <div className='my-4 font-bold'>
+          {counterLines
+            .map(([key, label]) => <StatLine key={key} label={label} value={counters[key]} />)}
         </div>
       )}
 
       {!!flagLines.length && (
-        <div className='my-2 font-bold'>
-          {flagLines.map(line => (<p key={line}>{line}</p>))}
+        <div className='my-4 font-bold'>
+          {flagLines.map(line => (<div key={line}>{line}</div>))}
         </div>
       )}
     </div>

@@ -1,4 +1,7 @@
 export type Realm = {
+  weapons: Weapon[],
+  relics: Relic[],
+  spells: Spell[],
   vessel: {
     triggers: Requirement[],
   },
@@ -49,7 +52,7 @@ export type Enemy = {
   unique?: true,
   health: number,
   range?: number[],
-  actions: EnemyAction[],
+  actions: FightAction[],
   result?: Result,
   choices?: Result[],
 };
@@ -58,7 +61,7 @@ export type EnemyInstance = Enemy & {
   start: string[],
 };
 
-export type EnemyAction = {
+export type FightAction = {
   roll: number[],
   move: number,
   harm: number,
@@ -80,8 +83,63 @@ export type Requirement = {
 };
 
 export type Character = {
+  health: number,
+  stamina: number,
+  lore: number,
   body: number,
   bone: number,
   blood: number,
-  lore: number,
+};
+
+export type Equipment = {
+  weapon: Weapon,
+  relic: Relic,
+  spells: Spell[],
+};
+
+export type ComponentCost = Partial<Pick<Character, 'body' | 'bone' | 'blood'>>;
+
+export type Weapon = {
+  name: string,
+  type: string,
+  range?: number[],
+  actions: FightAction[],
+  abilities?: {
+    name: string,
+    description: string,
+  }[],
+};
+
+export type Relic = {
+  name: string,
+  effects: {
+    cost: ComponentCost,
+    benefit: {
+      block?: number,
+      harm?: number,
+      heal?: number,
+      move?: number,
+    },
+  }[],
+};
+
+export type Spell = {
+  name: string,
+  range?: number[],
+  actions: {
+    cost?: ComponentCost,
+    roll: number[],
+    description: string,
+    // TODO: effect
+  }[],
+  abilities?: {
+    name: string,
+    description: string,
+    // TODO: effect
+  }[],
+  effects?: {
+    cost: ComponentCost,
+    description: string,
+    // TODO: effect
+  }[],
 };

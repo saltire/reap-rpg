@@ -66,7 +66,6 @@ export default function Point() {
           return (
             <Button
               key={`${point.id}-${i}`} // eslint-disable-line react/no-array-index-key
-              className={disabled ? 'text-zinc-500' : undefined}
               disabled={disabled}
               onClick={() => {
                 dispatch({ type: 'use_action', pointId: point.id, actionId: action.id });
@@ -105,11 +104,10 @@ export default function Point() {
             return (
               <Button
                 key={exit.id}
-                className={preventMove ? 'text-zinc-500' : undefined}
                 disabled={preventMove}
                 onClick={() => dispatch({ type: 'go_to_point', pointId: exit.id, useVeil })}
               >
-                <span className={`w-4 h-4 leading-4 mr-1 ${preventMove ? 'bg-zinc-500' : 'bg-black'} text-white rounded-full`}>
+                <span className='w-4 h-4 leading-4 mr-1 bg-black text-white rounded-full'>
                   {exit.id}
                 </span>
                 <span className={!visited ? 'font-bold' : undefined}>{exit.name}</span>
