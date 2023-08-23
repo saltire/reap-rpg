@@ -1,8 +1,15 @@
-import { useGameState } from '../state';
+import { useMemo } from 'react';
+
+import Button from './components/Button';
+import realm from '../realm';
+import { useDispatch, useGameState } from '../state';
 
 
 export default function Equipment() {
-  const { equipment } = useGameState();
+  const dispatch = useDispatch();
+  const { equipment, pointId, actionId } = useGameState();
+  const point = useMemo(() => realm.points.find(p => p.id === pointId), [pointId]);
+  const action = useMemo(() => point?.actions?.find(a => a.id === actionId), [point, actionId]);
 
   return equipment && (
     <div className='Equipment'>
@@ -23,6 +30,16 @@ export default function Equipment() {
       <div className='my-4'>
         <p>Spells</p>
         {equipment.spells.map(spell => <p key={spell.name} className='font-bold'>{spell.name}</p>)}
+      </div>
+
+      <div>
+        <Button
+          className='justify-center'
+          disabled={!!action?.fight}
+          onClick={() => dispatch({ type: 'edit_equipment' })}
+        >
+          Switch
+        </Button>
       </div>
     </div>
   );

@@ -7,6 +7,7 @@ import { Character, Equipment, Requirement, Result } from './types';
 export type GameState = {
   character: Character,
   equipment?: Equipment,
+  editEquipment?: boolean,
   vessel: number,
   pointId: number,
   points: Record<number, ({
@@ -64,7 +65,9 @@ export type StateAction = {
 } | {
   type: 'reset_game',
 } | {
-  type: 'set_equipment',
+  type: 'edit_equipment',
+} | {
+  type: 'save_equipment',
   equipment: Equipment,
 } | {
   type: 'go_to_point',
@@ -101,8 +104,13 @@ export const reducer: Reducer<GameState, StateAction> = (state: GameState, actio
       break;
     }
 
-    case 'set_equipment': {
-      newState = { ...newState, equipment: action.equipment };
+    case 'edit_equipment': {
+      newState = { ...newState, editEquipment: true };
+      break;
+    }
+
+    case 'save_equipment': {
+      newState = { ...newState, equipment: action.equipment, editEquipment: false };
       break;
     }
 

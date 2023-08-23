@@ -2,7 +2,7 @@ import { useMemo, useState } from 'react';
 
 import Button from './components/Button';
 import realm from '../realm';
-import { useDispatch } from '../state';
+import { useDispatch, useGameState } from '../state';
 import { Equipment } from '../types';
 
 
@@ -33,13 +33,17 @@ function Card({ name, selected, disabled, onSelect, onDeselect }: CardProps) {
 
 export default function ChooseEquipment() {
   const dispatch = useDispatch();
+  const { equipment } = useGameState();
 
-  const [weaponId, setWeaponId] = useState(() => (weapons.length === 1 ? weapons[0].name : null));
-  const [relicId, setRelicId] = useState(() => (relics.length === 1 ? relics[0].name : null));
+  const [weaponId, setWeaponId] = useState(
+    () => equipment?.weapon.name ?? (weapons.length === 1 ? weapons[0].name : null));
+  const [relicId, setRelicId] = useState(
+    () => equipment?.relic.name ?? (relics.length === 1 ? relics[0].name : null));
   const [spellIds, setSpellIds] = useState(
-    () => (spells.length <= 2 ? spells.map(s => s.name) : []));
+    () => equipment?.spells.map(s => s.name)
+      ?? (spells.length <= 2 ? spells.map(s => s.name) : []));
 
-  const equipment: Equipment | null = useMemo(() => {
+  const newEquipment: Equipment | null = useMemo(() => {
     const weapon = weaponId && weapons.find(w => w.name === weaponId);
     const relic = relicId && relics.find(r => r.name === relicId);
     const splls = spellIds.length === 2 && spells.filter(s => spellIds.includes(s.name));
@@ -95,10 +99,11 @@ export default function ChooseEquipment() {
       <div className='w-max mx-auto my-8'>
         <Button
           className='font-semi'
-          disabled={!equipment}
-          onClick={() => equipment && dispatch({ type: 'set_equipment', equipment })}
+          disabled={!newEquipment}
+          onClick={() => newEquipment
+            && dispatch({ type: 'save_equipment', equipment: newEquipment })}
         >
-          Start
+          {equipment ? 'Continue' : 'Start'}
         </Button>
       </div>
     </div>
