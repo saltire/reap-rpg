@@ -4,6 +4,10 @@ import realm from './realm';
 import { Character, Equipment, Requirement, Result } from './types';
 
 
+export type FightState = {
+  // TODO
+};
+
 export type GameState = {
   character: Character,
   equipment?: Equipment,
@@ -15,6 +19,7 @@ export type GameState = {
     actions?: number[],
   } | undefined)>,
   actionId?: number,
+  fight?: FightState,
   clockSegments: number,
   clockEffects?: number[],
   clockEffectId?: number,
@@ -77,6 +82,10 @@ export type StateAction = {
   type: 'use_action',
   pointId: number,
   actionId: number,
+} | {
+  type: 'start_fight',
+} | {
+  type: 'end_fight',
 } | {
   type: 'clear_action',
 } | {
@@ -145,6 +154,17 @@ export const reducer: Reducer<GameState, StateAction> = (state: GameState, actio
         },
       };
       newState.actionId = action.actionId;
+      break;
+    }
+
+    case 'start_fight': {
+      newState.fight = {};
+      break;
+    }
+
+    case 'end_fight': {
+      newState.fight = undefined;
+      newState.vessel += 1;
       break;
     }
 

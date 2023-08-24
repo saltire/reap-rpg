@@ -1,5 +1,6 @@
 import { useMemo } from 'react';
 
+import Fight from './Fight';
 import Button from './components/Button';
 import SplitLines from './components/SplitLines';
 import realm from '../realm';
@@ -9,7 +10,7 @@ import { signedNum } from '../utils';
 
 export default function Result() {
   const dispatch = useDispatch();
-  const { pointId, actionId } = useGameState();
+  const { pointId, actionId, fight } = useGameState();
   const point = useMemo(() => realm.points.find(p => p.id === pointId), [pointId]);
   const action = useMemo(() => point?.actions?.find(a => a.id === actionId), [point, actionId]);
 
@@ -25,38 +26,48 @@ export default function Result() {
         {action.name}
       </h3>
 
-      {action.description && (
-        <div className='text-xl text-left italic'>
-          <SplitLines text={action.description} />
-        </div>
-      )}
+      {action.fight && fight ? (
+        <Fight fight={action.fight} state={fight} />
+      ) : (
+        <>
+          {action.description && (
+            <div className='text-xl text-left italic'>
+              <SplitLines text={action.description} />
+            </div>
+          )}
 
-      {action.resultText && (
-        <div className='text-xl text-left'>
-          <SplitLines text={action.resultText} />
-        </div>
-      )}
+          {action.resultText && (
+            <div className='text-xl text-left'>
+              <SplitLines text={action.resultText} />
+            </div>
+          )}
 
-      <div className='w-max mx-auto my-8'>
-        {action.choices ? (
-          action.choices.map(choice => (
-            <Button
-              key={JSON.stringify(choice)}
-              className='font-bold capitalize'
-              onClick={() => {
-                dispatch({ type: 'apply_result', result: choice });
-                dispatch({ type: 'clear_action' });
-              }}
-            >
-              {Object.entries(choice.character ?? {})
-                .map(([key, value]) => `${key}: ${signedNum(value)}`)
-                .join(' ')}
-            </Button>
-          ))
-        ) : (
-          <Button onClick={() => dispatch({ type: 'clear_action' })}>Return</Button>
-        )}
-      </div>
+          <div className='w-max mx-auto my-8'>
+            {action.choices ? (
+              action.choices.map(choice => (
+                <Button
+                  key={JSON.stringify(choice)}
+                  className='font-bold capitalize'
+                  onClick={() => {
+                    dispatch({ type: 'apply_result', result: choice });
+                    dispatch({ type: 'clear_action' });
+                  }}
+                >
+                  {Object.entries(choice.character ?? {})
+                    .map(([key, value]) => `${key}: ${signedNum(value)}`)
+                    .join(' ')}
+                </Button>
+              )))
+              : (action.fight ? (
+                <Button onClick={() => dispatch({ type: 'start_fight' })}>
+                  Start fight
+                </Button>
+              ) : (
+                <Button onClick={() => dispatch({ type: 'clear_action' })}>Return</Button>
+              ))}
+          </div>
+        </>
+      )}
     </div>
   );
 }
