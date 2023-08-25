@@ -1,15 +1,20 @@
 import { createContext, Dispatch, Reducer, useContext } from 'react';
 
 import realm from './realm';
-import { Character, Equipment, Requirement, Result } from './types';
+import { ReaperStats, Equipment, Requirement, Result } from './types';
 
 
 export type FightState = {
-  // TODO
+  reaper: string,
+  enemies: {
+    name: string,
+    health: number,
+    cell: string,
+  }[],
 };
 
 export type GameState = {
-  character: Character,
+  reaper: ReaperStats,
   equipment?: Equipment,
   editEquipment?: boolean,
   vessel: number,
@@ -28,7 +33,7 @@ export type GameState = {
 };
 
 export const initialState: GameState = {
-  character: {
+  reaper: {
     health: 10,
     stamina: 2,
     lore: 0,
@@ -55,14 +60,14 @@ const compMax: Record<string, number | undefined> = {
 };
 
 export const requirementMet = (req: Requirement, state: GameState) => !!(
-  (Object.entries(req.character ?? {})
-    .every(([key, value]) => (state.character[key as keyof Character] || 0) >= value))
+  (Object.entries(req.reaper ?? {})
+    .every(([key, value]) => (state.reaper[key as keyof ReaperStats] || 0) >= value))
   && (Object.entries(req.counters ?? {})
     .every(([key, value]) => state.counters[key] >= value))
   && (Object.entries(req.flags ?? {})
     .every(([key, value]) => state.flags[key] === value))
   && (req.componentTotal === undefined
-    || state.character.body + state.character.bone + state.character.blood >= req.componentTotal)
+    || state.reaper.body + state.reaper.bone + state.reaper.blood >= req.componentTotal)
 );
 
 export type StateAction = {
@@ -84,6 +89,7 @@ export type StateAction = {
   actionId: number,
 } | {
   type: 'start_fight',
+  state: FightState,
 } | {
   type: 'end_fight',
 } | {
@@ -158,7 +164,7 @@ export const reducer: Reducer<GameState, StateAction> = (state: GameState, actio
     }
 
     case 'start_fight': {
-      newState.fight = {};
+      newState.fight = action.state;
       break;
     }
 
@@ -176,11 +182,11 @@ export const reducer: Reducer<GameState, StateAction> = (state: GameState, actio
 
     case 'apply_result': {
       console.log(action.result);
-      Object.entries(action.result.character ?? {}).forEach(([key, value]) => {
-        newState.character = {
-          ...newState.character,
+      Object.entries(action.result.reaper ?? {}).forEach(([key, value]) => {
+        newState.reaper = {
+          ...newState.reaper,
           [key]: Math.max(0, Math.min(compMax[key] ?? Infinity,
-            (newState.character[key as keyof Character] || 0) + value)),
+            (newState.reaper[key as keyof ReaperStats] || 0) + value)),
         };
       });
       Object.entries(action.result.counters ?? {}).forEach(([key, value]) => {

@@ -53,13 +53,25 @@ export default function Result() {
                     dispatch({ type: 'clear_action' });
                   }}
                 >
-                  {Object.entries(choice.character ?? {})
+                  {Object.entries(choice.reaper ?? {})
                     .map(([key, value]) => `${key}: ${signedNum(value)}`)
                     .join(' ')}
                 </Button>
               )))
               : (action.fight ? (
-                <Button onClick={() => dispatch({ type: 'start_fight' })}>
+                <Button
+                  onClick={() => action.fight && dispatch({
+                    type: 'start_fight',
+                    state: {
+                      reaper: action.fight.start,
+                      enemies: action.fight.enemies.flatMap(enemy => enemy.start.map(cell => ({
+                        name: enemy.name,
+                        health: enemy.health,
+                        cell,
+                      }))),
+                    },
+                  })}
+                >
                   Start fight
                 </Button>
               ) : (

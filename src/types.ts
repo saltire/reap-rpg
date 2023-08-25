@@ -69,20 +69,20 @@ export type FightAction = {
 };
 
 export type Result = {
-  character?: Partial<Character>,
+  reaper?: Partial<ReaperStats>,
   counters?: Record<string, number>,
   flags?: Record<string, boolean>,
   moveTo?: number,
 };
 
 export type Requirement = {
-  character?: Partial<Character>,
+  reaper?: Partial<ReaperStats>,
   counters?: Record<string, number>,
   flags?: Record<string, boolean>,
   componentTotal?: number,
 };
 
-export type Character = {
+export type ReaperStats = {
   health: number,
   stamina: number,
   lore: number,
@@ -97,7 +97,7 @@ export type Equipment = {
   spells: Spell[],
 };
 
-export type ComponentCost = Partial<Pick<Character, 'body' | 'bone' | 'blood'>>;
+export type ComponentCost = Partial<Pick<ReaperStats, 'body' | 'bone' | 'blood'>>;
 
 export type Weapon = {
   name: string,

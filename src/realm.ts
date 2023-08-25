@@ -26,9 +26,9 @@ const acolyte: Enemy = {
     },
   ],
   choices: [
-    { character: { body: 1 } },
-    { character: { bone: 1 } },
-    { character: { blood: 1 } },
+    { reaper: { body: 1 } },
+    { reaper: { bone: 1 } },
+    { reaper: { blood: 1 } },
   ],
 };
 
@@ -54,7 +54,7 @@ const ashborn: Enemy = {
       harm: 3,
     },
   ],
-  result: { character: { body: 1 } },
+  result: { reaper: { body: 1 } },
 };
 
 const cultist: Enemy = {
@@ -80,9 +80,9 @@ const cultist: Enemy = {
     },
   ],
   choices: [
-    { character: { body: 1 } },
-    { character: { bone: 1 } },
-    { character: { blood: 1 } },
+    { reaper: { body: 1 } },
+    { reaper: { bone: 1 } },
+    { reaper: { blood: 1 } },
   ],
 };
 
@@ -103,7 +103,7 @@ const gaunt: Enemy = {
       harm: 4,
     },
   ],
-  result: { character: { body: 1, bone: 1 } },
+  result: { reaper: { body: 1, bone: 1 } },
 };
 
 const grin: Enemy = {
@@ -119,9 +119,9 @@ const grin: Enemy = {
     },
   ],
   choices: [
-    { character: { body: 1 } },
-    { character: { bone: 1 } },
-    { character: { blood: 1 } },
+    { reaper: { body: 1 } },
+    { reaper: { bone: 1 } },
+    { reaper: { blood: 1 } },
   ],
 };
 
@@ -307,7 +307,7 @@ const realm: Realm = {
   ],
   vessel: {
     triggers: [
-      { character: { lore: 2 } },
+      { reaper: { lore: 2 } },
       { flags: { horrorName: true } },
       { componentTotal: 2 },
     ],
@@ -318,7 +318,7 @@ const realm: Realm = {
       name: 'Clock 1',
       fillDescription: 'The sound of an unholy choir rings out through the air, starting in the east, with a response from the south.',
       fillText: 'Lose one of each component you are currently carrying.',
-      result: { character: { body: -1, bone: -1, blood: -1 } },
+      result: { reaper: { body: -1, bone: -1, blood: -1 } },
     },
     {
       id: 2,
@@ -347,9 +347,9 @@ const realm: Realm = {
           description: 'The corpse of one of the residents of this land leans against the altar. They won’t be needing their parts, and so you salvage what you can.',
           resultText: 'Choose 1 component to reap from the corpse: Bone, Body, or Blood.',
           choices: [
-            { character: { body: 1 } },
-            { character: { bone: 1 } },
-            { character: { blood: 1 } },
+            { reaper: { body: 1 } },
+            { reaper: { bone: 1 } },
+            { reaper: { blood: 1 } },
           ],
         },
       ],
@@ -367,7 +367,7 @@ const realm: Realm = {
           description: 'One local is willing to meet with you. “Necromancer...we’ve not seen one like you in a while. Please, they don’t realize it. Their prayers will be the death of us.”',
           resultText: 'Increase Lore +1.',
           result: {
-            character: { lore: 1 },
+            reaper: { lore: 1 },
           },
         },
         {
@@ -446,7 +446,7 @@ const realm: Realm = {
               { ...ashborn, start: ['A2', 'B2', 'C2'] },
             ],
           },
-          result: { character: { body: 3, bone: 3, blood: 3 } },
+          result: { reaper: { body: 3, bone: 3, blood: 3 } },
         },
       ],
     },
@@ -462,15 +462,15 @@ const realm: Realm = {
           description: 'An offering basket sits near the entrance. Inside are pieces of the congregation.',
           resultText: 'Reap one of any component type: Blood, Body, or Bone.',
           choices: [
-            { character: { body: 1 } },
-            { character: { bone: 1 } },
-            { character: { blood: 1 } },
+            { reaper: { body: 1 } },
+            { reaper: { bone: 1 } },
+            { reaper: { blood: 1 } },
           ],
         },
         {
           id: 62,
           name: 'DELVE',
-          requires: [{ character: { lore: 2 } }],
+          requires: [{ reaper: { lore: 2 } }],
           description: 'You know the way to the organ in the church, and can damage it. When you face the Horror, they do not have access to their *Organ* special ability.',
           result: {
             flags: { disableOrgan: true },
@@ -498,7 +498,7 @@ const realm: Realm = {
           description: 'It’s not a beast you seek, it’s one of our own. The high priest Lysander has been twisted, their gospel a most vicious spell.',
           resultText: 'Increase Lore +1. In addition, learn the Horror’s name.',
           result: {
-            character: { lore: 1 },
+            reaper: { lore: 1 },
             flags: { horrorName: true },
           },
         },
@@ -523,7 +523,7 @@ const realm: Realm = {
             ],
           },
           result: {
-            character: { lore: 1 },
+            reaper: { lore: 1 },
             flags: { acolytesKey: true },
           },
         },

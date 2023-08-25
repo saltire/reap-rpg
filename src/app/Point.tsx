@@ -4,7 +4,7 @@ import Button from './components/Button';
 import SplitLines from './components/SplitLines';
 import realm from '../realm';
 import { useDispatch, useGameState } from '../state';
-import { Character, PointAction } from '../types';
+import { ReaperStats, PointAction } from '../types';
 import { classList, exists } from '../utils';
 
 
@@ -25,9 +25,9 @@ export default function Point() {
   // Check action requirements (fail if ALL are unmet, pass if ANY are met).
   const reqsMet = (action: PointAction) => !(action.requires?.length
     && action.requires.every(require => (
-      // Check character.
-      Object.entries(require.character ?? {})
-        .some(([key, value]) => (state.character[key as keyof Character] || 0) < value)
+      // Check player stats.
+      Object.entries(require.reaper ?? {})
+        .some(([key, value]) => (state.reaper[key as keyof ReaperStats] || 0) < value)
       // Check flags.
       || Object.entries(require.flags ?? {})
         .some(([key, value]) => !state.flags[key] === value)
