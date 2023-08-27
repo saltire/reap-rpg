@@ -4,13 +4,16 @@ import realm from './realm';
 import { ReaperStats, Equipment, Requirement, Result } from './types';
 
 
+export type CharacterState = {
+  name: string,
+  index?: number,
+  health: number,
+  cell: string,
+};
+
 export type FightState = {
   reaper: string,
-  enemies: {
-    name: string,
-    health: number,
-    cell: string,
-  }[],
+  enemies: CharacterState[],
 };
 
 export type GameState = {

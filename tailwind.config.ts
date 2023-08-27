@@ -20,6 +20,9 @@ export default {
         240: '240deg',
         300: '300deg',
       },
+      width: {
+        '1/8': '12.5%',
+      },
     },
   },
   plugins: [],

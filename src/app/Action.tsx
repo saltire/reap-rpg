@@ -64,8 +64,9 @@ export default function Result() {
                     type: 'start_fight',
                     state: {
                       reaper: action.fight.start,
-                      enemies: action.fight.enemies.flatMap(enemy => enemy.start.map(cell => ({
+                      enemies: action.fight.enemies.flatMap(enemy => enemy.start.map((cell, i) => ({
                         name: enemy.name,
+                        index: enemy.start.length > 1 ? i + 1 : undefined,
                         health: enemy.health,
                         cell,
                       }))),
