@@ -51,60 +51,62 @@ export default function ChooseEquipment() {
   }, [weaponId, relicId, spellIds]);
 
   return (
-    <div className='ChooseEquipment'>
-      <div>
-        <h2 className='mt-8 text-xl font-semi'>Weapon</h2>
+    <div className='ChooseEquipment h-full px-4 overflow-y-auto'>
+      <div className='max-w-screen-sm mx-auto text-center'>
         <div>
-          {weapons.map(weapon => (
-            <Card
-              key={weapon.name}
-              name={weapon.name}
-              selected={weaponId === weapon.name}
-              onSelect={() => setWeaponId(weapon.name)}
-            />
-          ))}
+          <h2 className='mt-8 text-xl font-semi'>Weapon</h2>
+          <div>
+            {weapons.map(weapon => (
+              <Card
+                key={weapon.name}
+                name={weapon.name}
+                selected={weaponId === weapon.name}
+                onSelect={() => setWeaponId(weapon.name)}
+              />
+            ))}
+          </div>
         </div>
-      </div>
 
-      <div>
-        <h2 className='mt-8 text-xl font-semi'>Relic</h2>
         <div>
-          {relics.map(relic => (
-            <Card
-              key={relic.name}
-              name={relic.name}
-              selected={relicId === relic.name}
-              onSelect={() => setRelicId(relic.name)}
-            />
-          ))}
+          <h2 className='mt-8 text-xl font-semi'>Relic</h2>
+          <div>
+            {relics.map(relic => (
+              <Card
+                key={relic.name}
+                name={relic.name}
+                selected={relicId === relic.name}
+                onSelect={() => setRelicId(relic.name)}
+              />
+            ))}
+          </div>
         </div>
-      </div>
 
-      <div>
-        <h2 className='mt-8 text-xl font-semi'>Spells</h2>
         <div>
-          {spells.map(spell => (
-            <Card
-              key={spell.name}
-              name={spell.name}
-              selected={spellIds.includes(spell.name)}
-              disabled={spellIds.length >= 2 && !spellIds.includes(spell.name)}
-              onSelect={() => setSpellIds(prev => [...prev, spell.name])}
-              onDeselect={() => setSpellIds(prev => prev.filter(s => s !== spell.name))}
-            />
-          ))}
+          <h2 className='mt-8 text-xl font-semi'>Spells</h2>
+          <div>
+            {spells.map(spell => (
+              <Card
+                key={spell.name}
+                name={spell.name}
+                selected={spellIds.includes(spell.name)}
+                disabled={spellIds.length >= 2 && !spellIds.includes(spell.name)}
+                onSelect={() => setSpellIds(prev => [...prev, spell.name])}
+                onDeselect={() => setSpellIds(prev => prev.filter(s => s !== spell.name))}
+              />
+            ))}
+          </div>
         </div>
-      </div>
 
-      <div className='w-max mx-auto my-8'>
-        <Button
-          className='font-semi'
-          disabled={!newEquipment}
-          onClick={() => newEquipment
-            && dispatch({ type: 'save_equipment', equipment: newEquipment })}
-        >
-          {equipment ? 'Continue' : 'Start'}
-        </Button>
+        <div className='w-max mx-auto my-8'>
+          <Button
+            className='font-semi'
+            disabled={!newEquipment}
+            onClick={() => newEquipment
+              && dispatch({ type: 'save_equipment', equipment: newEquipment })}
+          >
+            {equipment ? 'Continue' : 'Start'}
+          </Button>
+        </div>
       </div>
     </div>
   );

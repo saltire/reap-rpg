@@ -40,80 +40,82 @@ export default function Point() {
     [point]);
 
   return point && (
-    <div className='Point'>
-      <h2 className='flex items-center justify-center my-8'>
-        <span className='w-9 h-9 leading-9 mr-4 bg-black text-white text-3xl rounded-full'>
-          {point.id}
-        </span>
-        <span className='text-5xl'>{point.name}</span>
-      </h2>
+    <div className='Point h-full px-4 overflow-y-auto'>
+      <div className='max-w-screen-sm mx-auto'>
+        <h2 className='flex items-center justify-center my-8'>
+          <span className='w-9 h-9 leading-9 mr-4 rounded-full bg-black text-white text-3xl text-center'>
+            {point.id}
+          </span>
+          <span className='text-5xl'>{point.name}</span>
+        </h2>
 
-      <div className='text-xl text-left italic'>
-        <SplitLines text={point.description} />
-      </div>
+        <div className='text-xl text-left italic'>
+          <SplitLines text={point.description} />
+        </div>
 
-      <p className='w-max mx-auto my-8'>
-        {point.actions?.map((action, i) => {
-          const unavailable = !!(
-            // Check action requirements.
-            !reqsMet(action)
-            // Check other actions for unresolved fights.
-            || (action.name !== 'FIGHT' && point.actions?.some(a => a.name === 'FIGHT'))
-          );
-          const used = actionUsed(action);
-          const disabled = used || unavailable;
-
-          return (
-            <Button
-              key={`${point.id}-${i}`} // eslint-disable-line react/no-array-index-key
-              disabled={disabled}
-              onClick={() => {
-                dispatch({ type: 'use_action', pointId: point.id, actionId: action.id });
-                if (action.result) {
-                  dispatch({ type: 'apply_result', result: action.result });
-                }
-              }}
-            >
-              <span className={classList('font-bold text-xl', used && 'line-through')}>
-                {action.name}
-              </span>
-              {used && <span>&nbsp;– Done</span>}
-              {unavailable && <span>&nbsp;– Unavailable</span>}
-            </Button>
-          );
-        })}
-      </p>
-
-      <div className='my-8'>
-        {!!state.counters.veilWalk && (
-          <label>
-            Use Veil Walk?
-            <input
-              type='checkbox'
-              className='ml-2'
-              checked={useVeil}
-              onChange={e => setUseVeil(e.target.checked)}
-            />
-          </label>
-        )}
-
-        <div className='w-max mx-auto my-4'>
-          {exits.map(exit => {
-            const visited = !!state.points[exit.id]?.visited;
+        <p className='w-max mx-auto my-8'>
+          {point.actions?.map((action, i) => {
+            const unavailable = !!(
+              // Check action requirements.
+              !reqsMet(action)
+              // Check other actions for unresolved fights.
+              || (action.name !== 'FIGHT' && point.actions?.some(a => a.name === 'FIGHT'))
+            );
+            const used = actionUsed(action);
+            const disabled = used || unavailable;
 
             return (
               <Button
-                key={exit.id}
-                disabled={preventMove}
-                onClick={() => dispatch({ type: 'go_to_point', pointId: exit.id, useVeil })}
+                key={`${point.id}-${i}`} // eslint-disable-line react/no-array-index-key
+                disabled={disabled}
+                onClick={() => {
+                  dispatch({ type: 'use_action', pointId: point.id, actionId: action.id });
+                  if (action.result) {
+                    dispatch({ type: 'apply_result', result: action.result });
+                  }
+                }}
               >
-                <span className='w-4 h-4 leading-4 mr-1 bg-black text-white rounded-full'>
-                  {exit.id}
+                <span className={classList('font-bold text-xl', used && 'line-through')}>
+                  {action.name}
                 </span>
-                <span className={!visited ? 'font-bold' : undefined}>{exit.name}</span>
+                {used && <span>&nbsp;– Done</span>}
+                {unavailable && <span>&nbsp;– Unavailable</span>}
               </Button>
             );
           })}
+        </p>
+
+        <div className='my-8'>
+          {!!state.counters.veilWalk && (
+            <label>
+              Use Veil Walk?
+              <input
+                type='checkbox'
+                className='ml-2'
+                checked={useVeil}
+                onChange={e => setUseVeil(e.target.checked)}
+              />
+            </label>
+          )}
+
+          <div className='w-max mx-auto my-4'>
+            {exits.map(exit => {
+              const visited = !!state.points[exit.id]?.visited;
+
+              return (
+                <Button
+                  key={exit.id}
+                  disabled={preventMove}
+                  onClick={() => dispatch({ type: 'go_to_point', pointId: exit.id, useVeil })}
+                >
+                  <span className='w-4 h-4 leading-4 mr-1 bg-black text-white rounded-full'>
+                    {exit.id}
+                  </span>
+                  <span className={!visited ? 'font-bold' : undefined}>{exit.name}</span>
+                </Button>
+              );
+            })}
+          </div>
         </div>
       </div>
     </div>

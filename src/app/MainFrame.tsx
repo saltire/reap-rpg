@@ -9,12 +9,10 @@ export default function MainFrame() {
   const { equipment, editEquipment, actionId, clockEffectId } = useGameState();
 
   return (
-    <div className='MainFrame flex-grow overflow-y-auto px-4'>
-      <div className='max-w-screen-sm mx-auto text-center'>
-        {(!equipment || editEquipment) ? <ChooseEquipment /> : (
-          clockEffectId ? <ClockEffect /> : (
-            actionId ? <Action /> : <Point />))}
-      </div>
+    <div className='MainFrame flex-grow overflow-hidden'>
+      {(!equipment || editEquipment) ? <ChooseEquipment /> : (
+        clockEffectId ? <ClockEffect /> : (
+          actionId ? <Action /> : <Point />))}
     </div>
   );
 }
